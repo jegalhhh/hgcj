@@ -38,7 +38,6 @@ class User(Base):
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     username: Mapped[str] = mapped_column(Text, unique=True, nullable=False)  # 아이디
     password_hash: Mapped[str] = mapped_column(Text, nullable=False)
-    name: Mapped[str] = mapped_column(Text, nullable=False)
     role: Mapped[str] = mapped_column(Text, default="owner")  # owner, admin
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
@@ -132,12 +131,10 @@ def verify_token(token: str):
 class SignupIn(BaseModel):
     username: str  # 아이디
     password: str
-    name: str
 
 class UserOut(BaseModel):
     id: int
     username: str  # 아이디
-    name: str
     role: str
     class Config:
         from_attributes = True
@@ -198,7 +195,7 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(securit
     db = SessionLocal()
     try:
         user = db.execute(
-            text("SELECT id, username, name, role FROM users WHERE username=:u"),
+            text("SELECT id, username, role FROM users WHERE username=:u"),
             {"u": username}
         ).mappings().first()
         if user is None:
@@ -231,11 +228,11 @@ def signup(payload: SignupIn):
             raise HTTPException(400, "이미 사용 중인 아이디입니다.")
         ph = bcrypt.hash(payload.password)
         db.execute(
-            text("INSERT INTO users(username, password_hash, name, role, created_at) VALUES (:u, :p, :n, 'owner', :c)"),
-            {"u": payload.username, "p": ph, "n": payload.name, "c": datetime.now(timezone.utc)},
+            text("INSERT INTO users(username, password_hash, role, created_at) VALUES (:u, :p, 'owner', :c)"),
+            {"u": payload.username, "p": ph, "c": datetime.now(timezone.utc)},
         )
         db.commit()
-        user_row = db.execute(text("SELECT id, username, name, role FROM users WHERE username=:u"), {"u": payload.username}).mappings().first()
+        user_row = db.execute(text("SELECT id, username, role FROM users WHERE username=:u"), {"u": payload.username}).mappings().first()
         return user_row
     finally:
         db.close()
@@ -447,7 +444,7 @@ def get_pending_donations(limit: int = 50, offset: int = 0, admin_user: dict = D
         rows = db.execute(
             text("""
                 SELECT d.id, d.business_id, d.quantity, d.memo, d.donated_at, d.created_at,
-                       b.name as business_name, u.name as owner_name
+                       b.name as business_name, u.username as owner_username
                 FROM donations d
                 JOIN businesses b ON d.business_id = b.id
                 JOIN users u ON b.owner_id = u.id
