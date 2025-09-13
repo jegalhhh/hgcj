@@ -13,6 +13,7 @@ export const Logo = styled.img`
 `;
 
 export const Title = styled.h1`
+  font-family: ROKAFSans, Pretendard, sans-serif;
   font-size: 17px;
   font-weight: 500;
   margin: 0;
@@ -20,6 +21,7 @@ export const Title = styled.h1`
 
 export const BackButton = styled.img`
   position: absolute;
-  left: 24px;
+  left: 0;
+  width: 11px;
   cursor: pointer;
 `;

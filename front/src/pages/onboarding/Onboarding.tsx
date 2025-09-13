@@ -1,6 +1,6 @@
 import obd_title from "../../assets/images/onboarding/obd_title.png";
-import obd_back from "../../assets/images/onboarding/obd_back.png";
-import logo from "../../assets/images/onboarding/logo.png";
+import obd_back from "../../assets/images/background/obd_back.png";
+import logo from "../../assets/images/logo/main_logo.png";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import SecondaryButton from "../../components/button/SecondaryButton";
@@ -12,17 +12,17 @@ const Onboarding = () => {
   return (
     <>
       <Container>
+        <Background src={obd_back} alt="배경" />
         <ImageWrapper>
           <Title src={obd_title} alt="온보딩 텍스트" />
           <Logo src={logo} alt="로고" />
-          <Background src={obd_back} alt="배경" />
         </ImageWrapper>
         <ButtonWrapper>
-          <SecondaryButton
+          <SecondaryCompact
             title="로그인"
             onClick={() => navigate("/auth/login")}
           />
-          <SecondaryButton
+          <SecondaryCompact
             title="비회원 로그인"
             onClick={() => navigate("/donation")}
           />
@@ -120,14 +120,15 @@ const Background = styled.img`
   bottom: calc(-1 * var(--padBottom, 44px));
   left: calc(-1 * var(--gutter, 24px));
   width: calc(100% + (var(--gutter, 24px) * 2));
-  height: auto;
+  height: calc(
+    var(--padBottom, 44px) +
+      clamp(0px, calc(min(100vw, 420px) * 317.55 / 412), 273.55px)
+  );
   max-width: none;
   aspect-ratio: 446.8 / 317.55;
+  object-fit: cover;
+  object-position: top;
   z-index: 0;
-
-  ${preset.xsShort} {
-    bottom: calc(-1 * var(--padBottom, 44px) + 10px);
-  }
 `;
 
 const ButtonWrapper = styled.div`
@@ -138,6 +139,7 @@ const ButtonWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 12px;
+  margin-bottom: 18px;
 
   ${mq.up("sm")} {
     gap: 14px;
@@ -150,6 +152,14 @@ const ButtonWrapper = styled.div`
   }
   ${preset.xsShort} {
     gap: 10px;
+  }
+`;
+
+const SecondaryCompact = styled(SecondaryButton)`
+  ${preset.xsShort} {
+    height: 50px;
+    border-radius: 35px;
+    font-size: 10px;
   }
 `;
 
