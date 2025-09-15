@@ -3,12 +3,12 @@ import * as S from "./Button.styles";
 type Props = {
   title: string;
   onClick: () => void;
-  className?: string;
+  disabled?: boolean;
 };
 
-const PrimaryButton = ({ title, onClick, className }: Props) => {
+const PrimaryButton = ({ title, onClick, disabled }: Props) => {
   return (
-    <S.PrimaryWrapper type="button" onClick={onClick} className={className}>
+    <S.PrimaryWrapper type="button" onClick={onClick} disabled={disabled}>
       <S.ButtonText>{title}</S.ButtonText>
     </S.PrimaryWrapper>
   );

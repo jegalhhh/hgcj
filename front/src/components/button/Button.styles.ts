@@ -10,6 +10,11 @@ const BaseButton = styled.button`
   cursor: pointer;
   font: inherit;
   color: inherit;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
 `;
 
 export const PrimaryWrapper = styled(BaseButton)`
@@ -18,6 +23,10 @@ export const PrimaryWrapper = styled(BaseButton)`
   width: 100%;
   height: 62px;
   padding: 19px 0;
+
+  &:disabled {
+    background-color: ${colors.gray3};
+  }
 `;
 
 export const SecondaryWrapper = styled(BaseButton)`
@@ -25,6 +34,10 @@ export const SecondaryWrapper = styled(BaseButton)`
   width: 100%;
   height: 63px;
   border-radius: 42px;
+
+  &:disabled {
+    background-color: ${colors.gray2};
+  }
 `;
 
 export const SelectWrapper = styled(BaseButton)<{ isSelected: boolean }>`

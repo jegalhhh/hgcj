@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback } from "react";
 
 const IMAGE_ACCEPT =
   "image/*,.png,.jpg,.jpeg,.jfif,.pjpeg,.pjp,.webp,.gif,.bmp,.tif,.tiff,.heic,.heif";
@@ -12,8 +12,6 @@ const isLikelyImage = (file: File) => {
 };
 
 export const useImagePicker = () => {
-  const createdUrlsRef = useRef<string[]>([]);
-
   const createInput = (opts: {
     accept?: string;
     multiple?: boolean;
@@ -38,16 +36,8 @@ export const useImagePicker = () => {
     return input;
   };
 
-  const toUrls = (files: File[]) => {
-    return files.map((f) => {
-      const url = URL.createObjectURL(f);
-      createdUrlsRef.current.push(url);
-      return url;
-    });
-  };
-
   const pickImages = useCallback(
-    (multiple = false, maxCount = 1): Promise<string[]> =>
+    (multiple = false, maxCount = 1): Promise<File[]> =>
       new Promise((resolve) => {
         const input = createInput({ accept: IMAGE_ACCEPT, multiple });
         input.addEventListener(
@@ -58,8 +48,7 @@ export const useImagePicker = () => {
             const limited = multiple
               ? imgs.slice(0, maxCount)
               : imgs.slice(0, 1);
-            const urls = toUrls(limited);
-            resolve(urls);
+            resolve(limited);
             input.remove();
           },
           { once: true }
@@ -70,8 +59,12 @@ export const useImagePicker = () => {
   );
 
   const pickFiles = useCallback(
-    (opts?: { multiple?: boolean; maxCount?: number; accept?: string }) =>
-      new Promise<string[]>((resolve) => {
+    (opts?: {
+      multiple?: boolean;
+      maxCount?: number;
+      accept?: string;
+    }): Promise<File[]> =>
+      new Promise((resolve) => {
         const multiple = opts?.multiple ?? false;
         const maxCount = opts?.maxCount ?? 1;
         const accept = opts?.accept ?? IMAGE_ACCEPT;
@@ -84,8 +77,7 @@ export const useImagePicker = () => {
             const limited = multiple
               ? imgs.slice(0, maxCount)
               : imgs.slice(0, 1);
-            const urls = toUrls(limited);
-            resolve(urls);
+            resolve(limited);
             input.remove();
           },
           { once: true }
@@ -96,7 +88,7 @@ export const useImagePicker = () => {
   );
 
   const takePhoto = useCallback(
-    (): Promise<string | null> =>
+    (): Promise<File | null> =>
       new Promise((resolve) => {
         const input = createInput({
           accept: IMAGE_ACCEPT,
@@ -105,11 +97,9 @@ export const useImagePicker = () => {
         input.addEventListener(
           "change",
           () => {
-            const f = input.files?.[0];
+            const f = input.files?.[0] ?? null;
             const ok = f && isLikelyImage(f);
-            const url = ok ? URL.createObjectURL(f!) : null;
-            if (url) createdUrlsRef.current.push(url);
-            resolve(url);
+            resolve(ok ? f! : null);
             input.remove();
           },
           { once: true }
@@ -119,12 +109,5 @@ export const useImagePicker = () => {
     []
   );
 
-  const revokeAll = useCallback(() => {
-    createdUrlsRef.current.forEach((u) => URL.revokeObjectURL(u));
-    createdUrlsRef.current = [];
-  }, []);
-
-  useEffect(() => () => revokeAll(), [revokeAll]);
-
-  return { pickImages, pickFiles, takePhoto, revokeAll };
+  return { pickImages, pickFiles, takePhoto };
 };

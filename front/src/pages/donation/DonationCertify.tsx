@@ -9,89 +9,133 @@ import PrimaryButton from "../../components/button/PrimaryButton";
 import { useState } from "react";
 import ImageUploadModal from "../../components/modal/ImageUploadModal";
 import StampModal from "../../components/modal/StampModal";
+import api from "../../../axiosConfig";
 
 const DonationCertify = () => {
   const navigate = useNavigate();
   const [uploadModalVisible, setUploadModalVisible] = useState(false);
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [uploadedImage, setUploadedImage] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [itemName, setItemName] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [loading, setLoading] = useState(false);
   const [stampModalVisible, setStampModalVisible] = useState(false);
+
+  const handleSubmit = async () => {
+    if (!itemName || !quantity || !uploadedImage) {
+      alert("모든 필드를 입력해 주세요.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("item_name", itemName);
+    formData.append("quantity", quantity);
+    formData.append("image", uploadedImage);
+
+    try {
+      setLoading(true);
+      const { data } = await api.post("/donations", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      console.log("기부 등록 성공:", data);
+      setStampModalVisible(true);
+    } catch (err: any) {
+      console.error("기부 등록 실패:", err.response?.data || err);
+      alert("기부 등록 중 오류가 발생했습니다.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <>
-      <Container>
-        <Header
-          variant="backWithTitle"
-          title="기부 인증하기"
-          onBack={() => navigate("/donation")}
+    <Container>
+      <Header
+        variant="backWithTitle"
+        title="기부 인증하기"
+        onBack={() => navigate("/donation")}
+      />
+
+      <DonationGuideBox />
+      <FormSection>
+        <div>
+          <UploadImageForm onClick={() => setUploadModalVisible(true)}>
+            <Label>1. 기부 이미지를 업로드 해주세요.</Label>
+            <UploadButton>
+              <UploadIcon src={uploadIcon} alt="사진 올리기" />
+              <UploadText>사진 올리기</UploadText>
+            </UploadButton>
+
+            {previewUrl && (
+              <>
+                <Preview>
+                  <PreviewImg src={previewUrl} alt="업로드 미리보기" />
+                </Preview>
+                <SmallButton
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (previewUrl.startsWith("blob:")) {
+                      URL.revokeObjectURL(previewUrl);
+                    }
+                    setPreviewUrl(null);
+                    setUploadedImage(null);
+                    setUploadModalVisible(false);
+                  }}
+                >
+                  다시 선택
+                </SmallButton>
+              </>
+            )}
+          </UploadImageForm>
+
+          <LabeledDonationInput
+            label="2. 기부 물품을 입력해주세요."
+            placeholder="기부 물품을 입력해주세요"
+            value={itemName}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setItemName(e.target.value)
+            }
+          />
+          <LabeledDonationInput
+            label="3. 물품 개수를 입력해주세요."
+            placeholder="기부 개수를 입력해주세요"
+            value={quantity}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setQuantity(e.target.value)
+            }
+          />
+        </div>
+
+        <ImageUploadModal
+          visible={uploadModalVisible}
+          onClose={() => setUploadModalVisible(false)}
+          onImageSelect={(file) => {
+            setUploadedImage(file);
+            setPreviewUrl(URL.createObjectURL(file)); // ✅ 여기서 직접 생성
+            setUploadModalVisible(false);
+          }}
         />
 
-        <DonationGuideBox />
-        <FormSection>
-          <div>
-            <UploadImageForm
-              onClick={() => setUploadModalVisible(true)}
-              aria-disabled={!uploadedImage}
-            >
-              <Label>1. 기부 이미지를 업로드 해주세요.</Label>
-              <UploadButton>
-                <UploadIcon src={uploadIcon} alt="사진 올리기" />
-                <UploadText>사진 올리기</UploadText>
-              </UploadButton>
-              {uploadedImage && (
-                <>
-                  <Preview>
-                    <PreviewImg src={uploadedImage} alt="업로드 미리보기" />
-                  </Preview>
-                  <SmallButton
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      try {
-                        if (uploadedImage.startsWith("blob:")) {
-                          URL.revokeObjectURL(uploadedImage);
-                        }
-                      } catch {}
-                      setUploadedImage(null);
-                      setUploadModalVisible(true);
-                    }}
-                  >
-                    다시 선택
-                  </SmallButton>
-                </>
-              )}
-            </UploadImageForm>
-            <LabeledDonationInput
-              label="2. 기부 물품을 입력해주세요."
-              placeholder="기부 물품을 입력해주세요"
-            />
-            <LabeledDonationInput
-              label="3. 물품 개수를 입력해주세요."
-              placeholder="기부 개수를 입력해주세요"
-            />
-          </div>
-          <ImageUploadModal
-            visible={uploadModalVisible}
-            onClose={() => setUploadModalVisible(false)}
-            onImageSelect={(uri) => {
-              setUploadedImage(uri);
-              setUploadModalVisible(false);
-            }}
-          />
-          <PrimaryButton
-            title="확인"
-            onClick={() => setStampModalVisible(true)}
-          />
-          <StampModal
-            visible={stampModalVisible}
-            onClose={() => setStampModalVisible(false)}
-          />
-        </FormSection>
-      </Container>
-    </>
+        <PrimaryButton
+          title={loading ? "등록 중..." : "확인"}
+          onClick={handleSubmit}
+          disabled={loading}
+        />
+
+        <StampModal
+          visible={stampModalVisible}
+          onClose={() => {
+            navigate("/donation");
+            setStampModalVisible(false);
+          }}
+        />
+      </FormSection>
+    </Container>
   );
 };
 
 export default DonationCertify;
-
 const Container = styled.div`
   width: 100%;
   position: relative;

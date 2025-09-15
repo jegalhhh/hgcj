@@ -1,20 +1,31 @@
 import styled from "styled-components";
 import { colors } from "../../styles/colors";
+import type { ChangeEvent } from "react";
 
 type LabeledInputProps = {
   label: string;
   placeholder?: string;
+  type?: string;
+  value?: string;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
 const LabeledDonationInput = ({
   label,
   placeholder,
-  ...props
+  type = "text",
+  value,
+  onChange,
 }: LabeledInputProps) => {
   return (
     <Field>
       <Label>{label}</Label>
-      <Input placeholder={placeholder} {...props} />
+      <Input
+        type={type}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+      />
     </Field>
   );
 };

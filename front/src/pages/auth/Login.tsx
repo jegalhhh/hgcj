@@ -6,9 +6,48 @@ import background from "../../assets/images/background/back_green.png";
 import LabeledInput from "../../components/form/LabeledInput";
 import PrimaryButton from "../../components/button/PrimaryButton";
 import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import api from "../../../axiosConfig";
+
+type LoginResponse = {
+  access_token: string;
+  token_type: "bearer";
+};
 
 const Login = () => {
   const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (!name || !password) {
+      alert("이름과 비밀번호를 입력해 주세요.");
+      return;
+    }
+    setLoading(true);
+    try {
+      const { data } = await api.post<LoginResponse>("/auth/login", {
+        name,
+        password,
+      });
+
+      localStorage.setItem("ACCESS_TOKEN", data.access_token);
+      api.defaults.headers.common.Authorization = `Bearer ${data.access_token}`;
+
+      navigate("/donation");
+    } catch (err: any) {
+      const status = err?.response?.status;
+      if (status === 422) {
+        alert("이름 또는 비밀번호가 올바르지 않습니다.");
+      } else {
+        alert("로그인 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -20,15 +59,31 @@ const Login = () => {
           onBack={() => navigate("/")}
         />
         <Logo src={loginLogo} alt="로고" />
-        <FormSection>
+        <FormSection as="form" onSubmit={handleSubmit}>
           <div>
-            <LabeledInput label="이름" placeholder="이름을 입력하세요." />
+            <LabeledInput
+              label="이름"
+              placeholder="이름을 입력하세요."
+              value={name}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setName(e.target.value)
+              }
+            />
             <LabeledInput
               label="비밀번호"
               placeholder="비밀번호를 입력하세요."
+              value={password}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setPassword(e.target.value)
+              }
             />
+            {}
           </div>
-          <PrimaryButton title="로그인" onClick={() => navigate("/donation")} />
+          <PrimaryButton
+            title="로그인"
+            onClick={() => handleSubmit()}
+            disabled={loading}
+          />
         </FormSection>
       </Container>
     </>
