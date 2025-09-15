@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Header from "../../components/common/Header/Header";
 import { mq, preset } from "../../styles/breakpoints";
 import loginLogo from "../../assets/images/logo/login_logo.png";
-import loginBack from "../../assets/images/background/login_back.png";
+import background from "../../assets/images/background/back_green.png";
 import LabeledInput from "../../components/form/LabeledInput";
 import PrimaryButton from "../../components/button/PrimaryButton";
 import { useNavigate } from "react-router-dom";
@@ -13,23 +13,23 @@ const Login = () => {
   return (
     <>
       <Container>
-        <Background src={loginBack} alt="로그인 배경" />
+        <Background src={background} alt="로그인 배경" />
         <Header
           variant="backWithTitle"
           title="로그인"
           onBack={() => navigate("/")}
         />
         <Logo src={loginLogo} alt="로고" />
-        <FormWrapper>
-          <InputWrapper>
+        <FormSection>
+          <div>
             <LabeledInput label="이름" placeholder="이름을 입력하세요." />
             <LabeledInput
               label="비밀번호"
               placeholder="비밀번호를 입력하세요."
             />
-          </InputWrapper>
+          </div>
           <PrimaryButton title="로그인" onClick={() => navigate("/donation")} />
-        </FormWrapper>
+        </FormSection>
       </Container>
     </>
   );
@@ -85,7 +85,7 @@ const Background = styled.img`
   z-index: 0;
 `;
 
-const FormWrapper = styled.div`
+const FormSection = styled.div`
   z-index: 2;
   width: 100%;
   margin-top: 113px;
@@ -107,5 +107,3 @@ const FormWrapper = styled.div`
     height: 450px;
   }
 `;
-
-const InputWrapper = styled.div``;

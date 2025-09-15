@@ -12,12 +12,12 @@ const Onboarding = () => {
   return (
     <>
       <Container>
-        <Background src={obd_back} alt="배경" />
-        <ImageWrapper>
+        <BackgroundImage src={obd_back} alt="배경" />
+        <ImageSection>
           <Title src={obd_title} alt="온보딩 텍스트" />
           <Logo src={logo} alt="로고" />
-        </ImageWrapper>
-        <ButtonWrapper>
+        </ImageSection>
+        <ButtonSection>
           <SecondaryCompact
             title="로그인"
             onClick={() => navigate("/auth/login")}
@@ -26,11 +26,11 @@ const Onboarding = () => {
             title="비회원 로그인"
             onClick={() => navigate("/donation")}
           />
-          <SignupWrapper onClick={() => navigate("/auth/signup")}>
+          <SignupSection onClick={() => navigate("/auth/signup")}>
             <Text>회원가입</Text>
             <Line />
-          </SignupWrapper>
-        </ButtonWrapper>
+          </SignupSection>
+        </ButtonSection>
       </Container>
     </>
   );
@@ -54,7 +54,7 @@ const Container = styled.div`
   justify-content: space-between;
 `;
 
-const ImageWrapper = styled.div`
+const ImageSection = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -115,7 +115,7 @@ const Logo = styled.img`
   }
 `;
 
-const Background = styled.img`
+const BackgroundImage = styled.img`
   position: absolute;
   bottom: calc(-1 * var(--padBottom, 44px));
   left: calc(-1 * var(--gutter, 24px));
@@ -131,7 +131,7 @@ const Background = styled.img`
   z-index: 0;
 `;
 
-const ButtonWrapper = styled.div`
+const ButtonSection = styled.div`
   position: relative;
   z-index: 2;
   width: 100%;
@@ -163,7 +163,7 @@ const SecondaryCompact = styled(SecondaryButton)`
   }
 `;
 
-const SignupWrapper = styled.div`
+const SignupSection = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;

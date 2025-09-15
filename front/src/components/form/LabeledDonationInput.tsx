@@ -6,7 +6,11 @@ type LabeledInputProps = {
   placeholder?: string;
 };
 
-const LabeledInput = ({ label, placeholder, ...props }: LabeledInputProps) => {
+const LabeledDonationInput = ({
+  label,
+  placeholder,
+  ...props
+}: LabeledInputProps) => {
   return (
     <Field>
       <Label>{label}</Label>
@@ -15,27 +19,27 @@ const LabeledInput = ({ label, placeholder, ...props }: LabeledInputProps) => {
   );
 };
 
-export default LabeledInput;
+export default LabeledDonationInput;
 
 const Field = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-bottom: 24px;
+  margin-bottom: 40px;
 `;
 
 const Label = styled.label`
-  font-size: 15px;
+  font-size: 17px;
 `;
 
 const Input = styled.input`
   width: 100%;
-  height: 55px;
-  padding: 12px 16px;
+  height: 48px;
+  padding: 16px;
   box-sizing: border-box;
 
-  background-color: ${colors.cream};
+  background-color: ${colors.gray1};
   color: ${colors.gray8};
   font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui,
     sans-serif;
@@ -45,12 +49,13 @@ const Input = styled.input`
   border: none;
   &::placeholder {
     font-size: 13px;
-    color: ${colors.gray5};
+
+    color: ${colors.gray6};
     opacity: 1;
   }
 
   &:focus {
     outline: none;
-    border-color: ${colors.green};
+    border-color: ${colors.gray6};
   }
 `;
