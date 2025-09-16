@@ -2,40 +2,126 @@ import styled from "styled-components";
 import top1 from "../../assets/images/donation/top1.png";
 import top2 from "../../assets/images/donation/top2.png";
 import top3 from "../../assets/images/donation/top3.png";
-import store from "../../assets/images/store.png";
+import user from "../../assets/images/icon/user.png";
+import { useEffect, useMemo, useState } from "react";
+import api from "../../../axiosConfig";
 
 type Props = {
   onClick?: () => void;
 };
 
+type TopDonor = {
+  user_id: number;
+  name: string;
+  profile_image_url: string | null;
+  total_count: number;
+  first_donation_at: string;
+};
+
 const Top3Donor = ({ onClick }: Props) => {
+  const [items, setItems] = useState<TopDonor[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        setLoading(true);
+        const res = await api.get<TopDonor[]>("/leaderboard/top3");
+        if (!mounted) return;
+        setItems((res.data ?? []).slice(0, 3));
+      } catch (e: any) {
+        const msg =
+          e?.response?.data?.message ||
+          e.message ||
+          "순위 정보를 불러오지 못했습니다.";
+        alert(msg);
+      } finally {
+        if (!mounted) return;
+        setLoading(false);
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const ranked = useMemo(() => {
+    const filled: (TopDonor | null)[] = [...items];
+    while (filled.length < 3) filled.push(null);
+    const order = [1, 0, 2];
+    return order.map((i) => filled[i] ?? null);
+  }, [items]);
+
+  const second = ranked[0];
+  const first = ranked[1];
+  const third = ranked[2];
+
   return (
     <>
       <Podium onClick={onClick}>
         <PodiumCard data-rank="2" $h={206}>
           <CardContent>
-            <DonorImage src={store} alt="가게이미지" />
+            <DonorImage
+              src={
+                loading
+                  ? user
+                  : second?.profile_image_url
+                  ? second.profile_image_url
+                  : user
+              }
+              alt="가게이미지"
+            />
             <TextWrapper>
-              <DonorName>가게2</DonorName>
-              <DonotStat>기부 50회</DonotStat>
+              <DonorName>{loading ? "None" : second?.name ?? "None"}</DonorName>
+              <DonotStat>
+                {loading
+                  ? "기부   회"
+                  : `기부 ${second?.total_count ?? "  "}회`}
+              </DonotStat>
             </TextWrapper>
           </CardContent>
         </PodiumCard>
         <PodiumCard data-rank="1" $h={240}>
           <CardContent>
-            <DonorImage data-rank="1" src={store} alt="가게이미지" />
+            <DonorImage
+              data-rank="1"
+              src={
+                loading
+                  ? user
+                  : first?.profile_image_url
+                  ? first.profile_image_url
+                  : user
+              }
+              alt="가게이미지"
+            />
             <TextWrapper>
-              <DonorName data-rank="1">가게1</DonorName>
-              <DonotStat data-rank="1">기부 50회</DonotStat>
+              <DonorName data-rank="1">
+                {loading ? "None" : first?.name ?? "None"}
+              </DonorName>
+              <DonotStat data-rank="1">
+                {loading ? "기부   회" : `기부 ${first?.total_count ?? "  "}회`}
+              </DonotStat>
             </TextWrapper>
           </CardContent>
         </PodiumCard>
         <PodiumCard data-rank="3" $h={206}>
           <CardContent>
-            <DonorImage src={store} alt="가게이미지" />
+            <DonorImage
+              src={
+                loading
+                  ? user
+                  : third?.profile_image_url
+                  ? third.profile_image_url
+                  : user
+              }
+              alt="가게이미지"
+            />
             <TextWrapper>
-              <DonorName>가게3</DonorName>
-              <DonotStat>기부 50회</DonotStat>
+              <DonorName>{loading ? "None" : third?.name ?? "None"}</DonorName>
+              <DonotStat>
+                {loading ? "기부   회" : `기부 ${third?.total_count ?? "  "}회`}
+              </DonotStat>
             </TextWrapper>
           </CardContent>
         </PodiumCard>

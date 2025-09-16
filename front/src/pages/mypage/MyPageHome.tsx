@@ -3,14 +3,85 @@ import Header from "../../components/common/Header/Header";
 import background from "../../assets/images/background/back_green.png";
 import { useNavigate } from "react-router-dom";
 import BottomTab from "../../components/common/BottomTab/BottomTab";
-import storeImage from "../../assets/images/store.png";
+import user from "../../assets/images/icon/user.png";
 import right from "../../assets/images/icon/right.png";
 import check from "../../assets/images/icon/check.png";
 import stamp from "../../assets/images/icon/stamp.png";
 import { colors } from "../../styles/colors";
+import { useEffect, useState } from "react";
+import api from "../../../axiosConfig";
+
+type Me = {
+  id: number;
+  name: string;
+  profile_image_url: string | null;
+};
+
+type StampCount = {
+  total_donations: number;
+  verified_donations: number;
+};
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "http://127.0.0.1:8000";
+
+function toAbsoluteUrl(url?: string | null) {
+  if (!url) return "";
+  const trimmed = url.trim();
+  if (!trimmed) return "";
+  if (/^https?:\/\//i.test(trimmed) || trimmed.startsWith("data:"))
+    return trimmed;
+  return `${API_BASE}${trimmed.startsWith("/") ? "" : "/"}${trimmed}`;
+}
 
 const MyPageHome = () => {
   const navigate = useNavigate();
+
+  const [me, setMe] = useState<Me | null>(null);
+  const [counts, setCounts] = useState<StampCount>({
+    total_donations: 0,
+    verified_donations: 0,
+  });
+
+  useEffect(() => {
+    let mounted = true;
+
+    const fetchAll = async () => {
+      try {
+        const [meRes, stampRes] = await Promise.all([
+          api.get<Me>("/users/me"),
+          api.get<StampCount>("/donations/me/stamps"),
+        ]);
+        if (!mounted) return;
+        setMe(meRes.data);
+        setCounts(stampRes.data);
+      } catch (e: any) {
+        alert(
+          e?.response?.data?.message ||
+            e?.message ||
+            "내 정보를 불러오지 못했습니다."
+        );
+      }
+    };
+
+    fetchAll();
+
+    const onStorage = () => {
+      const hasToken = !localStorage.getItem("ACCESS_TOKEN");
+      if (hasToken) fetchAll();
+      else {
+        setMe(null);
+        setCounts({ total_donations: 0, verified_donations: 0 });
+      }
+    };
+
+    window.addEventListener("storage", onStorage);
+    return () => {
+      mounted = false;
+      window.removeEventListener("storage", onStorage);
+    };
+  }, []);
+
+  const profileSrc = toAbsoluteUrl(me?.profile_image_url) || user;
 
   return (
     <>
@@ -18,8 +89,15 @@ const MyPageHome = () => {
         <Header variant="title" title="마이페이지" />
 
         <TopSection>
-          <UserImage src={storeImage} alt="사용자 프로필" />
-          <UserName>이름</UserName>
+          <UserImage
+            src={profileSrc}
+            alt="사용자 프로필"
+            onError={(e) => {
+              const t = e.currentTarget;
+              if (t.src !== user) t.src = user;
+            }}
+          />
+          <UserName>{me?.name ?? "이름"}</UserName>
         </TopSection>
 
         <BottomSection>
@@ -32,17 +110,23 @@ const MyPageHome = () => {
               </Row>
               <Circle>
                 <CheckIcon src={check} alt="기부 횟수 바로가기" />
-                <CircleText>2회</CircleText>
+                <CircleText>{counts.total_donations}회</CircleText>
               </Circle>
             </CardContent>
-            <CardContent onClick={() => navigate("/mypage/stamp")}>
+            <CardContent
+              onClick={() =>
+                navigate("/mypage/stamp", {
+                  state: { stampCount: counts.verified_donations },
+                })
+              }
+            >
               <Row>
                 <CardText>스탬프</CardText>
                 <RightIcon src={right} alt="스탬프 바로가기" />
               </Row>
               <Circle>
                 <StampIcon src={stamp} alt="스탬프 바로가기" />
-                <CircleText>3개</CircleText>
+                <CircleText>{counts.verified_donations}개</CircleText>
               </Circle>
             </CardContent>
           </StatusCard>

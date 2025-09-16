@@ -23,7 +23,7 @@ const Login = () => {
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
     if (!name || !password) {
-      alert("이름과 비밀번호를 입력해 주세요.");
+      alert("닉네임과 비밀번호를 입력해 주세요.");
       return;
     }
     setLoading(true);
@@ -40,7 +40,7 @@ const Login = () => {
     } catch (err: any) {
       const status = err?.response?.status;
       if (status === 422) {
-        alert("이름 또는 비밀번호가 올바르지 않습니다.");
+        alert("닉네임 또는 비밀번호가 올바르지 않습니다.");
       } else {
         alert("로그인 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.");
       }
@@ -62,8 +62,8 @@ const Login = () => {
         <FormSection as="form" onSubmit={handleSubmit}>
           <div>
             <LabeledInput
-              label="이름"
-              placeholder="이름을 입력하세요."
+              label="닉네임"
+              placeholder="닉네임을 입력하세요."
               value={name}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setName(e.target.value)

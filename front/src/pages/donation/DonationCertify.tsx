@@ -6,37 +6,86 @@ import LabeledDonationInput from "../../components/form/LabeledDonationInput";
 import uploadIcon from "../../assets/images/icon/share.png";
 import { colors } from "../../styles/colors";
 import PrimaryButton from "../../components/button/PrimaryButton";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ImageUploadModal from "../../components/modal/ImageUploadModal";
 import StampModal from "../../components/modal/StampModal";
 import api from "../../../axiosConfig";
 
 const DonationCertify = () => {
   const navigate = useNavigate();
+
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    Boolean(localStorage.getItem("ACCESS_TOKEN"))
+  );
+
+  useEffect(() => {
+    const onStorage = () =>
+      setIsLoggedIn(Boolean(localStorage.getItem("ACCESS_TOKEN")));
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+
   const [uploadModalVisible, setUploadModalVisible] = useState(false);
   const [uploadedImage, setUploadedImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
   const [itemName, setItemName] = useState("");
   const [quantity, setQuantity] = useState("");
+  const [guestNickname, setGuestNickname] = useState("");
   const [loading, setLoading] = useState(false);
   const [stampModalVisible, setStampModalVisible] = useState(false);
+  const [modalInitialCount, setModalInitialCount] = useState<
+    number | undefined
+  >(undefined);
 
   const handleSubmit = async () => {
-    if (!itemName || !quantity || !uploadedImage) {
-      alert("모든 필드를 입력해 주세요.");
+    if (!itemName.trim()) {
+      alert("기부 물품을 입력해 주세요.");
       return;
     }
+    const qty = Number(quantity);
+    if (!Number.isInteger(qty) || qty <= 0) {
+      alert("개수는 1 이상의 정수로 입력해 주세요.");
+      return;
+    }
+    if (!uploadedImage) {
+      alert("이미지를 업로드해 주세요.");
+      return;
+    }
+    /*
+    if (!isLoggedIn && !guestNickname.trim()) {
+      alert("닉네임을 입력해 주세요.");
+      return;
+    }
+      */
 
     const formData = new FormData();
     formData.append("item_name", itemName);
     formData.append("quantity", quantity);
     formData.append("image", uploadedImage);
 
+    /*
+    비회원용 닉네임 설정 - 서버 로직 수정 필요
+    if (!isLoggedIn) {
+      formData.append("nickname", guestNickname.trim());
+    }
+      */
     try {
       setLoading(true);
       const { data } = await api.post("/donations", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+
+      try {
+        const { data: counts } = await api.get<{
+          total_donations: number;
+          verified_donations: number;
+        }>("/donations/me/stamps");
+        const optimistic = Number(counts?.verified_donations ?? 0) + 1;
+        setModalInitialCount(optimistic);
+      } catch {
+        setModalInitialCount(undefined);
+      }
 
       console.log("기부 등록 성공:", data);
       setStampModalVisible(true);
@@ -59,6 +108,16 @@ const DonationCertify = () => {
       <DonationGuideBox />
       <FormSection>
         <div>
+          {/*!isLoggedIn && (
+            <LabeledDonationInput
+            label="0. 닉네임을 입력해주세요."
+            placeholder="닉네임을 입력해주세요."
+            value={guestNickname}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setGuestNickname(e.target.value)
+            }
+            />
+          )*/}
           <UploadImageForm onClick={() => setUploadModalVisible(true)}>
             <Label>1. 기부 이미지를 업로드 해주세요.</Label>
             <UploadButton>
@@ -112,7 +171,7 @@ const DonationCertify = () => {
           onClose={() => setUploadModalVisible(false)}
           onImageSelect={(file) => {
             setUploadedImage(file);
-            setPreviewUrl(URL.createObjectURL(file)); // ✅ 여기서 직접 생성
+            setPreviewUrl(URL.createObjectURL(file));
             setUploadModalVisible(false);
           }}
         />
@@ -125,6 +184,7 @@ const DonationCertify = () => {
 
         <StampModal
           visible={stampModalVisible}
+          initialCount={modalInitialCount}
           onClose={() => {
             navigate("/donation");
             setStampModalVisible(false);

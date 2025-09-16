@@ -55,7 +55,7 @@ const Signup = () => {
     e?.preventDefault();
 
     if (!name || name.trim().length < 2) {
-      alert("이름을 2글자 이상 입력해 주세요.");
+      alert("닉네임을 2글자 이상 입력해 주세요.");
       return;
     }
     if (!password || password.length < 6) {
@@ -73,15 +73,38 @@ const Signup = () => {
         name,
         password,
       });
+
+      if (profileImageFile) {
+        const fd = new FormData();
+        fd.append("file", profileImageFile);
+        fd.append("user_id", String(data.id));
+
+        try {
+          await api.post("/auth/profile-image", fd, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+        } catch (uploadErr: any) {
+          console.error(
+            "프로필 이미지 업로드 실패:",
+            uploadErr?.response?.data || uploadErr
+          );
+        }
+      }
+
       alert("회원가입 성공!");
       navigate("/");
     } catch (err: any) {
-      console.error("회원가입 에러:", err.response?.data);
+      console.error("회원가입 실패:", err.response?.data);
       const status = err?.response?.status;
       if (status === 422) {
         alert("입력값이 올바르지 않습니다.");
       } else {
-        alert("회원가입 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.");
+        const detail = err.response?.data?.detail;
+        if (detail === "Name already exists") {
+          alert("이미 존재하는 닉네임입니다.");
+        } else {
+          alert("회원가입 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.");
+        }
       }
     } finally {
       setLoading(false);
@@ -100,8 +123,8 @@ const Signup = () => {
         <FormSection as="form" onSubmit={handleSubmit}>
           <div>
             <LabeledInput
-              label="이름"
-              placeholder="이름을 입력하세요. (2글자 이상)"
+              label="닉네임"
+              placeholder="닉네임을 입력하세요. (2글자 이상)"
               value={name}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setName(e.target.value)

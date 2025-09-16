@@ -10,9 +10,55 @@ import IconButton from "../../components/button/IconButton";
 import hallLogo from "../../assets/images/logo/hall_logo.png";
 import Top3Donor from "../../components/ui/Top3Donor";
 import TopDonorCard from "../../components/ui/TopDonorCard";
+import { useEffect, useState } from "react";
+import api from "../../../axiosConfig";
+
+type StampCount = {
+  total_donations: number;
+  verified_donations: number;
+};
 
 const DonationHome = () => {
   const navigate = useNavigate();
+  const [counts, setCounts] = useState<StampCount>({
+    total_donations: 0,
+    verified_donations: 0,
+  });
+
+  useEffect(() => {
+    let mounted = true;
+
+    const fetchCounts = async () => {
+      try {
+        const { data } = await api.get<StampCount>("/donations/me/stamps");
+        if (!mounted) return;
+        setCounts({
+          total_donations: Number(data?.total_donations ?? 0),
+          verified_donations: Number(data?.verified_donations ?? 0),
+        });
+      } catch (e: any) {
+        alert(
+          e?.response?.data?.message ||
+            e?.message ||
+            "내 기부 현황을 불러오지 못했습니다."
+        );
+      }
+    };
+
+    fetchCounts();
+
+    const onStorage = () => {
+      const hasToken = !!localStorage.getItem("ACCESS_TOKEN");
+      if (hasToken) fetchCounts();
+      else setCounts({ total_donations: 0, verified_donations: 0 });
+    };
+    window.addEventListener("storage", onStorage);
+
+    return () => {
+      mounted = false;
+      window.removeEventListener("storage", onStorage);
+    };
+  }, []);
 
   return (
     <>
@@ -40,11 +86,11 @@ const DonationHome = () => {
             <RowSection>
               <StatusRow>
                 <RowText>기부 횟수</RowText>
-                <RowTextBold>1회</RowTextBold>
+                <RowTextBold>{counts.total_donations}회</RowTextBold>
               </StatusRow>
               <StatusRow>
                 <RowText>스탬프</RowText>
-                <RowTextBold>3개</RowTextBold>
+                <RowTextBold>{counts.verified_donations}개</RowTextBold>
               </StatusRow>
             </RowSection>
           </DonationStatusCard>

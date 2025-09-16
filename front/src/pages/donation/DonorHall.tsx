@@ -8,21 +8,16 @@ import Top3Donor from "../../components/ui/Top3Donor";
 import storeImage from "../../assets/images/store.png";
 import user from "../../assets/images/icon/user.png";
 import { colors } from "../../styles/colors";
+import { useEffect, useMemo, useState } from "react";
+import api from "../../../axiosConfig";
 
-const leaderboardRest = [
-  {
-    id: "r4",
-    rank: 4,
-    name: "가게 이름",
-    donationCount: 128,
-    avatar: storeImage,
-  },
-  { id: "r5", rank: 5, name: "가게", donationCount: 123, avatar: storeImage },
-  { id: "r6", rank: 6, name: "가게", donationCount: 50, avatar: storeImage },
-  { id: "r7", rank: 7, name: "가게", donationCount: 50, avatar: storeImage },
-  { id: "r8", rank: 8, name: "가게", donationCount: 50, avatar: storeImage },
-  { id: "r9", rank: 9, name: "가게", donationCount: 50, avatar: storeImage },
-];
+type LeaderboardItem = {
+  user_id: number;
+  name: string;
+  profile_image_url: string | null;
+  total_count: number;
+  first_donation_at: string;
+};
 
 const DonorHall = () => {
   const navigate = useNavigate();
@@ -34,7 +29,52 @@ const DonorHall = () => {
     (_, i) => START_RANK + i
   );
 
-  const restByRank = new Map(leaderboardRest.map((d) => [d.rank, d]));
+  const [rest, setRest] = useState<
+    {
+      id: string;
+      rank: number;
+      name: string;
+      donationCount: number;
+      avatar: string;
+    }[]
+  >([]);
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const { data } = await api.get<LeaderboardItem[]>("/leaderboard/all");
+        if (!mounted) return;
+
+        const sliced = (data ?? []).slice(3, 10);
+
+        const mapped = sliced.map((d, idx) => ({
+          id: `r${START_RANK + idx}`,
+          rank: START_RANK + idx,
+          name: d.name,
+          donationCount: d.total_count,
+          avatar: d.profile_image_url || user,
+        }));
+
+        setRest(mapped);
+      } catch (e: any) {
+        alert(
+          e?.reponse?.data?.message ||
+            e?.message ||
+            "순위 정보를 불러오지 못했습니다."
+        );
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const restByRank = useMemo(
+    () => new Map(rest.map((d) => [d.rank, d])),
+    [rest]
+  );
 
   return (
     <>
@@ -55,7 +95,7 @@ const DonorHall = () => {
                     {isEmpty ? (
                       <ImagePlaceHolder src={user} alt="이미지 없음" />
                     ) : (
-                      <Image src={d.avatar} alt={`${d.name} 이미지`} />
+                      <Image src={d!.avatar} alt={`${d!.name} 이미지`} />
                     )}
                     <Name>{d?.name ?? ""}</Name>
                   </RowLeft>

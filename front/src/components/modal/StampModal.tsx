@@ -2,14 +2,46 @@ import styled from "styled-components";
 import { colors } from "../../styles/colors";
 import x_icon from "../../assets/images/icon/x_icon.png";
 import stampModal from "../../assets/images/donation/stamp_modal.png";
+import { useEffect, useState } from "react";
+import api from "../../../axiosConfig";
 
 interface Props {
   visible: boolean;
   onClose: () => void;
+  initialCount: number | undefined;
 }
 
-const StampModal = ({ visible, onClose }: Props) => {
-  const stampCount = 3;
+type StampCounts = {
+  total_donations: number;
+  verified_donations: number;
+};
+
+const StampModal = ({ visible, onClose, initialCount }: Props) => {
+  const [stampCount, setStampCount] = useState<number>(initialCount ?? 0);
+
+  useEffect(() => {
+    if (!visible) return;
+
+    let mounted = true;
+    (async () => {
+      try {
+        const { data } = await api.get<StampCounts>("/donations/me/stamps");
+        if (!mounted) return;
+        const server = Number(data?.verified_donations ?? 0);
+        setStampCount((prev) => Math.max(prev, server));
+      } catch (e: any) {
+        alert(
+          e?.response?.data?.message ||
+            e?.message ||
+            "스탬프 정보를 불러오지 못했습니다."
+        );
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, [visible, initialCount]);
   if (!visible) return null;
 
   return (

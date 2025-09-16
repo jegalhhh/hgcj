@@ -2,59 +2,74 @@ import styled from "styled-components";
 import Header from "../../components/common/Header/Header";
 import BottomTab from "../../components/common/BottomTab/BottomTab";
 import { useNavigate } from "react-router-dom";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import SelectButton from "../../components/button/SelectButton";
 import HistoryCard from "../../components/ui/HistoryCard";
 import { colors } from "../../styles/colors";
+import api from "../../../axiosConfig";
 
-const DUMMY_HISTORY = [
-  {
-    id: "a1",
-    timestamp: new Date("2025-09-10T12:13:00").getTime(),
-    status: "기부완료",
-    image: "https://picsum.photos/seed/d1/120/120",
-    title: "컵케이크 6개",
-    quantity: 6,
-  },
-  {
-    id: "a2",
-    timestamp: new Date("2025-08-25T09:30:00").getTime(),
-    status: "기부완료",
-    image: "https://picsum.photos/seed/d2/120/120",
-    title: "과일 도시락",
-    quantity: 3,
-  },
-  {
-    id: "a3",
-    timestamp: new Date("2025-07-20T15:45:00").getTime(),
-    status: "대기중",
-    image: "https://picsum.photos/seed/d3/120/120",
-    title: "샌드위치",
-    quantity: 5,
-  },
-  {
-    id: "a4",
-    timestamp: new Date("2025-06-15T11:00:00").getTime(),
-    status: "기부완료",
-    image: "https://picsum.photos/seed/d4/120/120",
-    title: "쿠키 박스",
-    quantity: 2,
-  },
-  {
-    id: "a5",
-    timestamp: new Date("2025-05-01T18:20:00").getTime(),
-    status: "기부완료",
-    image: "https://picsum.photos/seed/d5/120/120",
-    title: "초콜릿 세트",
-    quantity: 1,
-  },
-];
+type Donation = {
+  id: number;
+  item_name: string;
+  quantity: number;
+  image_url: string | null;
+  verified: boolean;
+  created_at: string;
+};
+
+type HistoryItem = {
+  id: string;
+  timestamp: number;
+  status: "기부완료" | "대기중";
+  image: string;
+  title: string;
+  quantity: number;
+};
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "http://127.0.0.1:8000";
+const FALLBACK_IMG = "https://placehold.co/120x120?text=No+Image";
+
+function toAbsoluteUrl(url?: string | null) {
+  if (!url) return "";
+  const u = url.trim();
+  if (!u) return "";
+  if (/^https?:\/\//i.test(u) || u.startsWith("data:")) return u;
+  return `${API_BASE}${u.startsWith("/") ? "" : "/"}${u}`;
+}
 
 const MyDonationHistory = () => {
   const navigate = useNavigate();
   const [filter, setFilter] = useState<"전체" | "1개월" | "3개월">("전체");
+  const [items, setItems] = useState<HistoryItem[]>([]);
 
-  const donationCount = 3;
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const { data } = await api.get<Donation[]>("/donations/me");
+        if (!mounted) return;
+
+        const mapped: HistoryItem[] = (data ?? []).map((d) => ({
+          id: String(d.id),
+          timestamp: new Date(d.created_at).getTime(),
+          status: d.verified ? "기부완료" : "대기중",
+          image: toAbsoluteUrl(d.image_url) || FALLBACK_IMG,
+          title: d.item_name,
+          quantity: d.quantity,
+        }));
+
+        setItems(mapped);
+      } catch (e: any) {
+        alert(
+          e?.response?.data?.message ||
+            e?.message ||
+            "기부내역을 불러오지 못했습니다."
+        );
+      }
+    })();
+  }, []);
+
+  const donationCount = items.length;
 
   const filterByDate = (timestamp: number) => {
     const now = Date.now();
@@ -71,9 +86,9 @@ const MyDonationHistory = () => {
 
   const filtered = useMemo(
     () =>
-      DUMMY_HISTORY.filter((i) => filterByDate(i.timestamp)).sort(
-        (a, b) => b.timestamp - a.timestamp
-      ),
+      items
+        .filter((i) => filterByDate(i.timestamp))
+        .sort((a, b) => b.timestamp - a.timestamp),
     [filter]
   );
 
@@ -108,7 +123,7 @@ const MyDonationHistory = () => {
               key={item.id}
               id={item.id}
               timestamp={item.timestamp}
-              status={item.status as "기부완료" | "대기중"}
+              status={item.status}
               image={item.image}
               title={item.title}
               quantity={item.quantity}

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Header from "../../components/common/Header/Header";
 import background from "../../assets/images/background/stamp_back.png";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import BottomTab from "../../components/common/BottomTab/BottomTab";
 import { colors } from "../../styles/colors";
 import tomatoGray from "../../assets/images/stamp/tomato.png";
@@ -24,6 +24,7 @@ import cucumberGray from "../../assets/images/stamp/cucumber.png";
 import cucumberColor from "../../assets/images/stamp/cucumber_color.svg";
 import potGray from "../../assets/images/stamp/pot.png";
 import potColor from "../../assets/images/stamp/pot_color.svg";
+import { useState } from "react";
 
 const STAMPS = [
   {
@@ -108,10 +109,15 @@ const STAMPS = [
   },
 ];
 
+type StampState = { stampCount?: number };
+
 const MyStamp = () => {
   const navigate = useNavigate();
+  const { state } = useLocation() as { state?: StampState };
 
-  const stampCount = 5;
+  const [stampCount, setStampCount] = useState<number>(
+    typeof state?.stampCount === "number" ? state.stampCount : 0
+  );
 
   return (
     <>
@@ -123,7 +129,7 @@ const MyStamp = () => {
         />
 
         <TopSection>
-          <BoldText>총 3개의 스탬프를 모았어요!</BoldText>
+          <BoldText>총 {stampCount}개의 스탬프를 모았어요!</BoldText>
           <DetailText>
             스탬프 10개를 모아 기부 인증 포스터를 받아보세요
           </DetailText>
