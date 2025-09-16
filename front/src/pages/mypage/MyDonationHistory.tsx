@@ -89,7 +89,7 @@ const MyDonationHistory = () => {
       items
         .filter((i) => filterByDate(i.timestamp))
         .sort((a, b) => b.timestamp - a.timestamp),
-    [filter]
+    [filter, items]
   );
 
   return (
