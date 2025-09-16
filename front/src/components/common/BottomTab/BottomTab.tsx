@@ -41,7 +41,7 @@ const BottomTab = () => {
 
   const handleClick = (tab: Tab) => {
     if (tab.disabled) {
-      window.alert("해당 기능은 개발 중입니다.");
+      window.alert("개발 중인 기능입니다.");
       return;
     }
     navigate(tab.to);

@@ -76,15 +76,15 @@ const Backdrop = styled.div`
   justify-content: center;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.25);
-  padding: 40px;
 `;
 
 const Card = styled.div`
   background-color: ${colors.cream};
-  width: 100%;
+  width: min(100vw, 380px);
   height: 383px;
   display: flex;
   flex-direction: column;
+  margin: 40px;
   padding: 12px;
   border-radius: 20px;
   align-items: center;

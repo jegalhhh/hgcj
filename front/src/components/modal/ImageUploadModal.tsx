@@ -101,13 +101,13 @@ const BackDrop = styled.div`
   z-index: 2000;
   display: flex;
   align-items: flex-end;
-  justify-content: flex-end;
+  justify-content: center;
   background-color: rgba(0, 0, 0, 0.25);
 `;
 
 const ModalView = styled.div`
   background-color: ${colors.cream};
-  width: 100%;
+  width: min(100vw, 420px);
   height: 211px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;

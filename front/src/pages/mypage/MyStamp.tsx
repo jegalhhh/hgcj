@@ -130,9 +130,7 @@ const MyStamp = () => {
 
         <TopSection>
           <BoldText>총 {stampCount}개의 스탬프를 모았어요!</BoldText>
-          <DetailText>
-            스탬프 10개를 모아 기부 인증 포스터를 받아보세요
-          </DetailText>
+          <DetailText>스탬프를 모으면 봉사시간으로 교환할 수 있어요</DetailText>
         </TopSection>
 
         <BottomSection>

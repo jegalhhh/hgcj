@@ -40,14 +40,14 @@ export const SecondaryWrapper = styled(BaseButton)`
   }
 `;
 
-export const SelectWrapper = styled(BaseButton)<{ isSelected: boolean }>`
-  background-color: ${({ isSelected }) =>
-    isSelected ? colors.green : "white"};
+export const SelectWrapper = styled(BaseButton)<{ $isSelected: boolean }>`
+  background-color: ${({ $isSelected }) =>
+    $isSelected ? colors.green : "white"};
   padding: 7px 20px;
   height: 34px;
   border-radius: 60px;
-  border: ${({ isSelected }) =>
-    isSelected ? "none" : `1px solid ${colors.green}`};
+  border: ${({ $isSelected }) =>
+    $isSelected ? "none" : `1px solid ${colors.green}`};
 `;
 
 export const ButtonText = styled.span`
@@ -56,10 +56,10 @@ export const ButtonText = styled.span`
   color: ${colors.gray8};
 `;
 
-export const SelectText = styled.span<{ isSelected?: boolean }>`
+export const SelectText = styled.span<{ $isSelected?: boolean }>`
   font-size: 13px;
   font-weight: 500;
-  color: ${({ isSelected }) => (isSelected ? colors.gray8 : colors.gray5)};
+  color: ${({ $isSelected }) => ($isSelected ? colors.gray8 : colors.gray5)};
 `;
 
 export const IconImage = styled.img<{ size?: number }>`
