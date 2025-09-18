@@ -2,6 +2,7 @@ import styled from "styled-components";
 import Header from "../../components/common/Header/Header";
 import background from "../../assets/images/background/back_yellow.png";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 import BottomTab from "../../components/common/BottomTab/BottomTab";
 import { colors } from "../../styles/colors";
 import plusIcon from "../../assets/images/icon/plus.png";
@@ -20,6 +21,7 @@ type StampCount = {
 
 const DonationHome = () => {
   const navigate = useNavigate();
+  const { authState } = useAuth();
   const [counts, setCounts] = useState<StampCount>({
     total_donations: 0,
     verified_donations: 0,
@@ -29,6 +31,11 @@ const DonationHome = () => {
     let mounted = true;
 
     const fetchCounts = async () => {
+      // 비회원일 경우 API 호출 안함
+      if (!authState.isLoggedIn) {
+        return;
+      }
+      
       try {
         const { data } = await api.get<StampCount>("/donations/me/stamps");
         if (!mounted) return;
@@ -66,7 +73,16 @@ const DonationHome = () => {
         <Header variant="logo" />
 
         <TopSection>
-          <DonationButton onClick={() => navigate("/donation/certify")}>
+          <DonationButton 
+            onClick={() => {
+              if (authState.isGuest) {
+                alert("기부 인증은 회원만 가능합니다. 회원가입 후 이용해주세요.");
+                navigate("/");
+              } else {
+                navigate("/donation/certify");
+              }
+            }}
+          >
             <DonationText>
               기부
               <br />
@@ -81,16 +97,31 @@ const DonationHome = () => {
               />
             </PlusIcon>
           </DonationButton>
-          <DonationStatusCard onClick={() => navigate("/mypage")}>
-            <StatusText>내 기부 현황</StatusText>
+          <DonationStatusCard 
+            onClick={() => {
+              if (authState.isGuest) {
+                alert("마이페이지는 회원만 이용 가능합니다. 회원가입 후 이용해주세요.");
+                navigate("/");
+              } else {
+                navigate("/mypage");
+              }
+            }}
+          >
+            <StatusText>
+              {authState.isGuest ? "비회원 모드" : "내 기부 현황"}
+            </StatusText>
             <RowSection>
               <StatusRow>
                 <RowText>기부 횟수</RowText>
-                <RowTextBold>{counts.total_donations}회</RowTextBold>
+                <RowTextBold>
+                  {authState.isGuest ? "-" : `${counts.total_donations}회`}
+                </RowTextBold>
               </StatusRow>
               <StatusRow>
                 <RowText>스탬프</RowText>
-                <RowTextBold>{counts.verified_donations}개</RowTextBold>
+                <RowTextBold>
+                  {authState.isGuest ? "-" : `${counts.verified_donations}개`}
+                </RowTextBold>
               </StatusRow>
             </RowSection>
           </DonationStatusCard>
