@@ -12,7 +12,6 @@ const Onboarding = () => {
   return (
     <>
       <Container>
-        <BackgroundImage src={obd_back} alt="배경" />
         <ImageSection>
           <Title src={obd_title} alt="온보딩 텍스트" />
           <Logo src={logo} alt="로고" />
@@ -115,22 +114,6 @@ const Logo = styled.img`
   }
 `;
 
-const BackgroundImage = styled.img`
-  position: absolute;
-  bottom: calc(-1 * var(--padBottom, 44px));
-  left: calc(-1 * var(--gutter, 24px));
-  width: calc(100% + (var(--gutter, 24px) * 2));
-  height: calc(
-    var(--padBottom, 44px) +
-      clamp(0px, calc(min(100vw, 420px) * 317.55 / 412), 273.55px)
-  );
-  max-width: none;
-  aspect-ratio: 446.8 / 317.55;
-  object-fit: cover;
-  object-position: top;
-  z-index: 0;
-`;
-
 const ButtonSection = styled.div`
   position: relative;
   z-index: 2;
@@ -140,6 +123,8 @@ const ButtonSection = styled.div`
   align-items: center;
   gap: 12px;
   margin-bottom: 18px;
+  padding: 68px 0 0 0;
+  margin-top: 88px;
 
   ${mq.up("sm")} {
     gap: 14px;
@@ -152,6 +137,18 @@ const ButtonSection = styled.div`
   }
   ${preset.xsShort} {
     gap: 10px;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0 calc(-1 * var(--gutter, 24px)) calc(-1 * var(--padBottom, 42px));
+    background-image: url(${obd_back});
+    background-repeat: repeat-y;
+    background-size: 100% auto;
+    background-position: top center;
+    z-index: -1;
+    pointer-events: none;
   }
 `;
 
