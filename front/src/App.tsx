@@ -10,7 +10,6 @@ import DonorHall from "./pages/donation/DonorHall.tsx";
 import MyPageHome from "./pages/mypage/MyPageHome.tsx";
 import MyDonationHistory from "./pages/mypage/MyDonationHistory.tsx";
 import MyStamp from "./pages/mypage/MyStamp.tsx";
-import MyInfo from "./pages/mypage/MyInfo.tsx";
 
 function App() {
   useViewportHeight();
@@ -32,7 +31,6 @@ function App() {
             <Route path="/mypage" element={<MyPageHome />} />
             <Route path="/mypage/history" element={<MyDonationHistory />} />
             <Route path="/mypage/stamp" element={<MyStamp />} />
-            <Route path="/mypage/info" element={<MyInfo />} />
           </Routes>
         </main>
       </div>

@@ -1,6 +1,6 @@
 import * as S from "./Header.styles";
-import headerLogo from "../../assets/images/header_logo.png";
-import backBtn from "../../assets/images/icon/left.png";
+import headerLogo from "../../../assets/images/logo/header_logo.png";
+import backBtn from "../../../assets/images/icon/left.png";
 
 type HeaderProps =
   | { variant: "logo" }

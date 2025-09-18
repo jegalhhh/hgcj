@@ -65,6 +65,20 @@ export const GlobalStyle = createGlobalStyle`
     font-display: swap;
     }
 
+    @font-face {
+    font-family: 'ROKAFSans';
+    font-weight: 500;
+    src: url('/fonts/ROKAF-Sans-Medium.ttf') format('truetype');
+    font-display: swap;
+    }
+
+    @font-face {
+    font-family: 'ROKAFSans';
+    font-weight: 700;
+    src: url('/fonts/ROKAF-Sans-Bold.ttf') format('truetype');
+    font-display: swap;
+    }
+
     *, *::before, *::after {
         box-sizing: border-box;
     }
@@ -112,10 +126,10 @@ export const GlobalStyle = createGlobalStyle`
         width: 100%;
     }
 
-    @support (padding-top: env(safe-area-inset-top)) {
+    @supports (padding-top: env(safe-area-inset-top)) {
         .container {
-            --padTop: calc(env(safe-area-inset-top) + 16px);
-            --padBottom: calc(env(safe-area-inset-top) + 16px);
+            --padTop: max(40px, calc(env(safe-area-inset-top) + 16px));
+            --padBottom: max(44px, calc(env(safe-area-inset-top) + 16px));
         }
     }
 `;

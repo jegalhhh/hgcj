@@ -8,8 +8,8 @@ type Props = {
 
 const SelectButton = ({ title, isSelected, onClick }: Props) => {
   return (
-    <S.SelectWrapper type="button" isSelected={isSelected} onClick={onClick}>
-      <S.SelectText isSelected={isSelected}>{title}</S.SelectText>
+    <S.SelectWrapper type="button" $isSelected={isSelected} onClick={onClick}>
+      <S.SelectText $isSelected={isSelected}>{title}</S.SelectText>
     </S.SelectWrapper>
   );
 };
