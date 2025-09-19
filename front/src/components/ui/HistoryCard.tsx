@@ -11,7 +11,6 @@ type DonationProps = {
 };
 
 const HistoryCard = ({
-  id,
   title,
   timestamp,
   image,

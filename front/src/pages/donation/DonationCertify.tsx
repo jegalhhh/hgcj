@@ -6,7 +6,7 @@ import LabeledDonationInput from "../../components/form/LabeledDonationInput";
 import uploadIcon from "../../assets/images/icon/share.png";
 import { colors } from "../../styles/colors";
 import PrimaryButton from "../../components/button/PrimaryButton";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ImageUploadModal from "../../components/modal/ImageUploadModal";
 import StampModal from "../../components/modal/StampModal";
 import api from "../../../axiosConfig";
@@ -14,16 +14,16 @@ import api from "../../../axiosConfig";
 const DonationCertify = () => {
   const navigate = useNavigate();
 
-  const [isLoggedIn, setIsLoggedIn] = useState(
+  /*   const [isLoggedIn, setIsLoggedIn] = useState(
     Boolean(localStorage.getItem("ACCESS_TOKEN"))
-  );
+  ); */
 
-  useEffect(() => {
+  /*   useEffect(() => {
     const onStorage = () =>
       setIsLoggedIn(Boolean(localStorage.getItem("ACCESS_TOKEN")));
     window.addEventListener("storage", onStorage);
     return () => window.removeEventListener("storage", onStorage);
-  }, []);
+  }, []); */
 
   const [uploadModalVisible, setUploadModalVisible] = useState(false);
   const [uploadedImage, setUploadedImage] = useState<File | null>(null);
@@ -31,7 +31,7 @@ const DonationCertify = () => {
 
   const [itemName, setItemName] = useState("");
   const [quantity, setQuantity] = useState("");
-  const [guestNickname, setGuestNickname] = useState("");
+  // const [guestNickname, setGuestNickname] = useState("");
   const [loading, setLoading] = useState(false);
   const [stampModalVisible, setStampModalVisible] = useState(false);
   const [modalInitialCount, setModalInitialCount] = useState<

@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import BottomTab from "../../components/common/BottomTab/BottomTab";
 import hallLogo from "../../assets/images/logo/hall_logo.png";
 import Top3Donor from "../../components/ui/Top3Donor";
-import storeImage from "../../assets/images/store.png";
 import user from "../../assets/images/icon/user.png";
 import { colors } from "../../styles/colors";
 import { useEffect, useMemo, useState } from "react";

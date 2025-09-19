@@ -4,7 +4,6 @@ import logo from "../../assets/images/logo/main_logo.png";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import SecondaryButton from "../../components/button/SecondaryButton";
-import { mq, preset } from "../../styles/breakpoints";
 
 const Onboarding = () => {
   const navigate = useNavigate();
@@ -57,61 +56,18 @@ const ImageSection = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 56px;
-  gap: 24px;
-
-  ${mq.up("sm")} {
-    margin-top: 72px;
-    gap: 28px;
-  }
-  ${mq.up("md")} {
-    margin-top: 96px;
-    gap: 34px;
-  }
-  ${mq.up("lg")} {
-    margin-top: 111px;
-    gap: 40px;
-  }
-  ${preset.xsShort} {
-    margin-top: 48px;
-    gap: 16px;
-  }
+  margin-top: clamp(48px, 12vmin, 111px);
+  gap: clamp(16px, 4vmin, 40px);
 `;
 
 const Title = styled.img`
-  width: 200px;
+  width: clamp(250px, calc(0.905263vmin - 101.684px), 274px);
   height: auto;
-
-  ${mq.up("sm")} {
-    width: 230px;
-  }
-  ${mq.up("md")} {
-    width: 250px;
-  }
-  ${mq.up("lg")} {
-    width: 274px;
-  }
-  ${preset.xsShort} {
-    width: 188px;
-  }
 `;
 
 const Logo = styled.img`
-  width: 220px;
+  width: clamp(310px, calc(1.242105vmin - 187.474px), 328px);
   height: auto;
-
-  ${mq.up("sm")} {
-    width: 270px;
-  }
-  ${mq.up("md")} {
-    width: 300px;
-  }
-  ${mq.up("lg")} {
-    width: 328px;
-  }
-  ${preset.xsShort} {
-    width: 210px;
-  }
 `;
 
 const ButtonSection = styled.div`
@@ -121,23 +77,9 @@ const ButtonSection = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 18px;
+  gap: clamp(10px, 2.5vmin, 16px);
   padding: 68px 0 0 0;
   margin-top: 88px;
-
-  ${mq.up("sm")} {
-    gap: 14px;
-  }
-  ${mq.up("md")} {
-    gap: 15px;
-  }
-  ${mq.up("lg")} {
-    gap: 16px;
-  }
-  ${preset.xsShort} {
-    gap: 10px;
-  }
 
   &::before {
     content: "";
@@ -153,11 +95,9 @@ const ButtonSection = styled.div`
 `;
 
 const SecondaryCompact = styled(SecondaryButton)`
-  ${preset.xsShort} {
-    height: 50px;
-    border-radius: 35px;
-    font-size: 10px;
-  }
+  height: clamp(58px, 6vmin, 63px);
+  border-radius: clamp(35px, 6vmin, 42px);
+  font-size: clamp(13px, 2.8vmin, 16px;);
 `;
 
 const SignupSection = styled.div`
