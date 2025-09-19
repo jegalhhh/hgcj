@@ -18,7 +18,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: hgcj-472606
-          service_account_key: ${{ secrets.GCP_SA_KEY }} # 아래 ‘권한/키’ 참고
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
 
       - name: Deploy to Cloud Run
