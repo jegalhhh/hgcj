@@ -26,15 +26,31 @@ type HistoryItem = {
   quantity: number;
 };
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "http://127.0.0.1:8000";
+const API_BASE =
+  import.meta.env.VITE_API_BASE_URL ?? "https://hgcj-back.vercel.app";
 const FALLBACK_IMG = "https://placehold.co/120x120?text=No+Image";
 
 function toAbsoluteUrl(url?: string | null) {
-  if (!url) return "";
+  console.log("toAbsoluteUrl input:", url);
+  if (!url) {
+    console.log("No URL provided");
+    return "";
+  }
   const u = url.trim();
-  if (!u) return "";
-  if (/^https?:\/\//i.test(u) || u.startsWith("data:")) return u;
-  return `${API_BASE}${u.startsWith("/") ? "" : "/"}${u}`;
+  if (!u) {
+    console.log("Empty URL after trim");
+    return "";
+  }
+  if (/^https?:\/\//i.test(u) || u.startsWith("data:")) {
+    console.log(
+      "Returning as-is (HTTP/HTTPS/data URL):",
+      u.substring(0, 50) + "..."
+    );
+    return u;
+  }
+  const result = `${API_BASE}${u.startsWith("/") ? "" : "/"}${u}`;
+  console.log("Converted to absolute URL:", result);
+  return result;
 }
 
 const MyDonationHistory = () => {
@@ -89,7 +105,7 @@ const MyDonationHistory = () => {
       items
         .filter((i) => filterByDate(i.timestamp))
         .sort((a, b) => b.timestamp - a.timestamp),
-    [filter, items]
+    [items, filter]
   );
 
   return (

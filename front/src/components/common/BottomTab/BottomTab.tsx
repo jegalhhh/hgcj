@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../../../contexts/AuthContext";
 import * as S from "./BottomTab.styles";
 import map from "../../../assets/images/icon/map.png";
 import donation from "../../../assets/images/icon/donation.png";
@@ -38,12 +39,23 @@ const TABS: Tab[] = [
 const BottomTab = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { authState } = useAuth();
 
   const handleClick = (tab: Tab) => {
     if (tab.disabled) {
       window.alert("개발 중인 기능입니다.");
       return;
     }
+
+    // 비회원이 마이페이지 접근 시 제한
+    if (tab.to === "/mypage" && authState.isGuest) {
+      window.alert(
+        "마이페이지는 회원만 이용 가능합니다. 회원가입 후 이용해주세요."
+      );
+      navigate("/");
+      return;
+    }
+
     navigate(tab.to);
   };
 

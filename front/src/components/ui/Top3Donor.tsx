@@ -18,6 +18,18 @@ type TopDonor = {
   first_donation_at: string;
 };
 
+const API_BASE =
+  import.meta.env.VITE_API_BASE_URL ?? "https://hgcj-back.vercel.app";
+
+function toAbsoluteUrl(url?: string | null) {
+  if (!url) return "";
+  const trimmed = url.trim();
+  if (!trimmed) return "";
+  if (/^https?:\/\//i.test(trimmed) || trimmed.startsWith("data:"))
+    return trimmed;
+  return `${API_BASE}${trimmed.startsWith("/") ? "" : "/"}${trimmed}`;
+}
+
 const Top3Donor = ({ onClick }: Props) => {
   const [items, setItems] = useState<TopDonor[]>([]);
   const [loading, setLoading] = useState(true);
@@ -66,9 +78,7 @@ const Top3Donor = ({ onClick }: Props) => {
               src={
                 loading
                   ? user
-                  : second?.profile_image_url
-                  ? second.profile_image_url
-                  : user
+                  : toAbsoluteUrl(second?.profile_image_url) || user
               }
               alt="가게이미지"
             />
@@ -87,11 +97,7 @@ const Top3Donor = ({ onClick }: Props) => {
             <DonorImage
               data-rank="1"
               src={
-                loading
-                  ? user
-                  : first?.profile_image_url
-                  ? first.profile_image_url
-                  : user
+                loading ? user : toAbsoluteUrl(first?.profile_image_url) || user
               }
               alt="가게이미지"
             />
@@ -109,11 +115,7 @@ const Top3Donor = ({ onClick }: Props) => {
           <CardContent>
             <DonorImage
               src={
-                loading
-                  ? user
-                  : third?.profile_image_url
-                  ? third.profile_image_url
-                  : user
+                loading ? user : toAbsoluteUrl(third?.profile_image_url) || user
               }
               alt="가게이미지"
             />

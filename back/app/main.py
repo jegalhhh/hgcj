@@ -11,22 +11,16 @@ app = FastAPI(title="Donation App (MVP)")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # 또는 ["*"] (개발만)
+    allow_origins=["http://localhost:5173", "https://hgcj-front.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-if settings.ALLOWED_ORIGINS:
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=settings.ALLOWED_ORIGINS,
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
-
-app.mount("/static", StaticFiles(directory="uploads"), name="static")
+# uploads 디렉토리가 존재할 때만 마운트 (로컬 개발용)
+import os
+if os.path.exists("uploads") and not os.getenv("VERCEL"):
+    app.mount("/static", StaticFiles(directory="uploads"), name="static")
 
 app.include_router(auth_router.router)
 app.include_router(donation_router.router)

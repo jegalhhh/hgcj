@@ -7,6 +7,7 @@ import LabeledInput from "../../components/form/LabeledInput";
 import PrimaryButton from "../../components/button/PrimaryButton";
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
 import api from "../../../axiosConfig";
 
 type LoginResponse = {
@@ -16,6 +17,7 @@ type LoginResponse = {
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -33,7 +35,7 @@ const Login = () => {
         password,
       });
 
-      localStorage.setItem("ACCESS_TOKEN", data.access_token);
+      login(data.access_token);
       api.defaults.headers.common.Authorization = `Bearer ${data.access_token}`;
 
       navigate("/donation");
@@ -72,6 +74,7 @@ const Login = () => {
             <LabeledInput
               label="비밀번호"
               placeholder="비밀번호를 입력하세요."
+              type="password"
               value={password}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setPassword(e.target.value)

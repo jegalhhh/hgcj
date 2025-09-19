@@ -22,15 +22,30 @@ type StampCount = {
   verified_donations: number;
 };
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "http://127.0.0.1:8000";
+const API_BASE =
+  import.meta.env.VITE_API_BASE_URL ?? "https://hgcj-back.vercel.app";
 
 function toAbsoluteUrl(url?: string | null) {
-  if (!url) return "";
+  console.log("MyPageHome toAbsoluteUrl input:", url);
+  if (!url) {
+    console.log("No URL provided");
+    return "";
+  }
   const trimmed = url.trim();
-  if (!trimmed) return "";
-  if (/^https?:\/\//i.test(trimmed) || trimmed.startsWith("data:"))
+  if (!trimmed) {
+    console.log("Empty URL after trim");
+    return "";
+  }
+  if (/^https?:\/\//i.test(trimmed) || trimmed.startsWith("data:")) {
+    console.log(
+      "Returning as-is (HTTP/HTTPS/data URL):",
+      trimmed.substring(0, 50) + "..."
+    );
     return trimmed;
-  return `${API_BASE}${trimmed.startsWith("/") ? "" : "/"}${trimmed}`;
+  }
+  const result = `${API_BASE}${trimmed.startsWith("/") ? "" : "/"}${trimmed}`;
+  console.log("Converted to absolute URL:", result);
+  return result;
 }
 
 const MyPageHome = () => {

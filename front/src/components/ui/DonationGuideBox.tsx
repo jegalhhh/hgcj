@@ -49,6 +49,7 @@ export default DonationGuideBox;
 
 const BoxView = styled.div`
   width: 100%;
+  height: 214px;
   background-color: rgba(255, 229, 226, 0.56);
   border-radius: 20px;
   padding: 19px 20px;
