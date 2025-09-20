@@ -53,14 +53,8 @@ const Login = () => {
   };
 
   const handleGuestLogin = () => {
-    // 기존 모든 데이터 완전히 삭제
-    localStorage.clear();
-    
-    // 비회원 모드 설정
     loginAsGuest();
-    
-    // 비회원 전용 리더보드 페이지로 이동
-    navigate("/guest/leaderboard");
+    navigate("/donation/hall");
   };
 
   return (
