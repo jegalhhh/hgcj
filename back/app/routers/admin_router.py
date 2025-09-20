@@ -73,7 +73,6 @@ def approve_donation(
     
     # 승인 처리
     donation.verified = True
-    donation.verified_at = datetime.utcnow()  # 승인 시간 기록 (필요시)
     db.commit()
     db.refresh(donation)
     
@@ -88,7 +87,7 @@ def approve_donation(
             "item_name": donation.item_name,
             "quantity": donation.quantity,
             "verified": donation.verified,
-            "verified_at": donation.verified_at.isoformat() if hasattr(donation, 'verified_at') and donation.verified_at else None
+            "approved_at": donation.created_at.isoformat()  # 생성 시간을 승인 시간으로 사용
         }
     }
 
