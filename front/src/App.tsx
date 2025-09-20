@@ -11,6 +11,7 @@ import DonorHall from "./pages/donation/DonorHall.tsx";
 import MyPageHome from "./pages/mypage/MyPageHome.tsx";
 import MyDonationHistory from "./pages/mypage/MyDonationHistory.tsx";
 import MyStamp from "./pages/mypage/MyStamp.tsx";
+import GuestLeaderboard from "./pages/guest/GuestLeaderboard.tsx";
 
 function App() {
   useViewportHeight();
@@ -33,6 +34,9 @@ function App() {
               <Route path="/mypage" element={<MyPageHome />} />
               <Route path="/mypage/history" element={<MyDonationHistory />} />
               <Route path="/mypage/stamp" element={<MyStamp />} />
+              
+              {/* 비회원 전용 라우트 */}
+              <Route path="/guest/leaderboard" element={<GuestLeaderboard />} />
             </Routes>
           </main>
         </div>

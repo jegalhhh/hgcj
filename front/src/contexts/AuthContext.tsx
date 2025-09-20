@@ -52,7 +52,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const loginAsGuest = () => {
-    localStorage.removeItem('ACCESS_TOKEN');
+    // 모든 기존 데이터 삭제 후 비회원 모드만 설정
+    localStorage.clear();
     localStorage.setItem('GUEST_MODE', 'true');
     setAuthState({
       isLoggedIn: false,
