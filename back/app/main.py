@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from .config import settings
 from .database import Base, engine
-from .routers import auth_router, donation_router, user_router, leaderboard_router
+from .routers import auth_router, donation_router, user_router, leaderboard_router, admin_router
 
 # 데이터베이스 초기화를 try-except로 감싸기
 try:
@@ -51,3 +51,4 @@ app.include_router(auth_router.router)
 app.include_router(donation_router.router)
 app.include_router(user_router.router)
 app.include_router(leaderboard_router.router)
+app.include_router(admin_router.router)

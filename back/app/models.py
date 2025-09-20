@@ -21,6 +21,7 @@ class Donation(Base):
     quantity = Column(Integer, nullable=False)
     image_url = Column(Text, nullable=True)
     verified = Column(Boolean, default=False)
+    verified_at = Column(DateTime, nullable=True)  # 승인 시간
     created_at = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("User", back_populates="donations")

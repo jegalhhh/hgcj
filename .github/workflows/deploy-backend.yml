@@ -29,4 +29,4 @@ jobs:
             --source . \
             --region asia-northeast3 \
             --allow-unauthenticated \
-            --set-env-vars SECRET_KEY=${{ secrets.SECRET_KEY }},ACCESS_TOKEN_EXPIRE_MINUTES=60,DATABASE_URL=${{ secrets.DATABASE_URL }}
+            --set-env-vars SECRET_KEY=${{ secrets.SECRET_KEY }},ACCESS_TOKEN_EXPIRE_MINUTES=60,DATABASE_URL=${{ secrets.DATABASE_URL }},ADMIN_SECRET=${{ secrets.ADMIN_SECRET }}
