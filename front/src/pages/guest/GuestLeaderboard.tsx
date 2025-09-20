@@ -263,7 +263,7 @@ const SignupButton = styled.button`
   cursor: pointer;
   
   &:hover {
-    background: ${colors.darkGreen || '#2a8f3f'};
+    background: ${colors.gray7};
   }
 `;
 
