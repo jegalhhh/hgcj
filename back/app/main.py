@@ -7,7 +7,7 @@ from .routers import auth_router, donation_router, user_router, leaderboard_rout
 
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="Donation App (MVP)")
+app = FastAPI(title="Donation App (MVP)", version="1.0.1")
 
 app.add_middleware(
     CORSMiddleware,
