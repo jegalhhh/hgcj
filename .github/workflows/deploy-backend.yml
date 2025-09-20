@@ -26,4 +26,5 @@ jobs:
           gcloud run deploy fastapi \
             --source . \
             --region asia-northeast3 \
-            --allow-unauthenticated
+            --allow-unauthenticated \
+            --set-env-vars SECRET_KEY=${{ secrets.SECRET_KEY }},ACCESS_TOKEN_EXPIRE_MINUTES=60,DATABASE_URL=${{ secrets.DATABASE_URL }}

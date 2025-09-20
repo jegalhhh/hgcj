@@ -11,7 +11,12 @@ app = FastAPI(title="Donation App (MVP)")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "https://hgcj-front.vercel.app"],
+    allow_origins=[
+        "http://localhost:5173", 
+        "https://hgcj-front.vercel.app",
+        "https://hgcj-472606.web.app",
+        "https://hgcj-472606.firebaseapp.com",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
