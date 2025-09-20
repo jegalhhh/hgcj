@@ -5,9 +5,20 @@ const api = axios.create({
   withCredentials: true,
 });
 
-const token = localStorage.getItem("ACCESS_TOKEN");
-if (token) {
-  api.defaults.headers.common.Authorization = `Bearer ${token}`;
-}
+// 요청 인터셉터로 동적 토큰 관리
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("ACCESS_TOKEN");
+  const isGuest = localStorage.getItem("GUEST_MODE") === "true";
+  
+  // 비회원이거나 토큰이 없으면 Authorization 헤더 제거
+  if (isGuest || !token) {
+    delete config.headers.Authorization;
+  } else {
+    // 토큰이 있으면 설정
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  
+  return config;
+});
 
 export default api;
