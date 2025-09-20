@@ -11,6 +11,7 @@ import hallLogo from "../../assets/images/logo/hall_logo.png";
 import Top3Donor from "../../components/ui/Top3Donor";
 import TopDonorCard from "../../components/ui/TopDonorCard";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
 import api from "../../../axiosConfig";
 
 type StampCount = {
@@ -20,6 +21,7 @@ type StampCount = {
 
 const DonationHome = () => {
   const navigate = useNavigate();
+  const { authState } = useAuth();
   const [counts, setCounts] = useState<StampCount>({
     total_donations: 0,
     verified_donations: 0,
@@ -29,6 +31,12 @@ const DonationHome = () => {
     let mounted = true;
 
     const fetchCounts = async () => {
+      // 비회원이면 API 호출하지 않음
+      if (authState.isGuest) {
+        setCounts({ total_donations: 0, verified_donations: 0 });
+        return;
+      }
+
       try {
         const { data } = await api.get<StampCount>("/donations/me/stamps");
         if (!mounted) return;
@@ -37,11 +45,10 @@ const DonationHome = () => {
           verified_donations: Number(data?.verified_donations ?? 0),
         });
       } catch (e: any) {
-        alert(
-          e?.response?.data?.message ||
-            e?.message ||
-            "내 기부 현황을 불러오지 못했습니다."
-        );
+        // 에러 시 조용히 0으로 설정 (비회원일 가능성)
+        if (mounted) {
+          setCounts({ total_donations: 0, verified_donations: 0 });
+        }
       }
     };
 
@@ -49,8 +56,13 @@ const DonationHome = () => {
 
     const onStorage = () => {
       const hasToken = !!localStorage.getItem("ACCESS_TOKEN");
-      if (hasToken) fetchCounts();
-      else setCounts({ total_donations: 0, verified_donations: 0 });
+      const isGuest = localStorage.getItem("GUEST_MODE") === "true";
+      
+      if (isGuest || !hasToken) {
+        setCounts({ total_donations: 0, verified_donations: 0 });
+      } else {
+        fetchCounts();
+      }
     };
     window.addEventListener("storage", onStorage);
 
@@ -58,7 +70,7 @@ const DonationHome = () => {
       mounted = false;
       window.removeEventListener("storage", onStorage);
     };
-  }, []);
+  }, [authState]);
 
   return (
     <>
@@ -66,7 +78,16 @@ const DonationHome = () => {
         <Header variant="logo" />
 
         <TopSection>
-          <DonationButton onClick={() => navigate("/donation/certify")}>
+          <DonationButton 
+            onClick={() => {
+              if (authState.isGuest) {
+                alert("기부 인증은 회원만 이용 가능합니다. 회원가입 후 이용해주세요.");
+                navigate("/");
+              } else {
+                navigate("/donation/certify");
+              }
+            }}
+          >
             <DonationText>
               기부
               <br />
@@ -81,16 +102,29 @@ const DonationHome = () => {
               />
             </PlusIcon>
           </DonationButton>
-          <DonationStatusCard onClick={() => navigate("/mypage")}>
+          <DonationStatusCard 
+            onClick={() => {
+              if (authState.isGuest) {
+                alert("마이페이지는 회원만 이용 가능합니다. 회원가입 후 이용해주세요.");
+                navigate("/");
+              } else {
+                navigate("/mypage");
+              }
+            }}
+          >
             <StatusText>내 기부 현황</StatusText>
             <RowSection>
               <StatusRow>
                 <RowText>기부 횟수</RowText>
-                <RowTextBold>{counts.total_donations}회</RowTextBold>
+                <RowTextBold>
+                  {authState.isGuest ? "-" : `${counts.total_donations}회`}
+                </RowTextBold>
               </StatusRow>
               <StatusRow>
                 <RowText>스탬프</RowText>
-                <RowTextBold>{counts.verified_donations}개</RowTextBold>
+                <RowTextBold>
+                  {authState.isGuest ? "-" : `${counts.verified_donations}개`}
+                </RowTextBold>
               </StatusRow>
             </RowSection>
           </DonationStatusCard>
