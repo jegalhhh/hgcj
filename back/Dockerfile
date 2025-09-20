@@ -16,5 +16,5 @@ COPY . .
 # 포트 설정
 EXPOSE 8080
 
-# uvicorn 실행 (Cloud Run 포트 사용)
-CMD exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8080}
+# 디버깅용 간단한 앱 실행
+CMD exec uvicorn simple_main:app --host 0.0.0.0 --port ${PORT:-8080}
