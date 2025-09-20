@@ -7,10 +7,27 @@ from .routers import auth_router, donation_router, user_router, leaderboard_rout
 
 # 데이터베이스 초기화를 try-except로 감싸기
 try:
+    print("Creating database tables...")
     Base.metadata.create_all(bind=engine)
-    print("Database tables created successfully")
+    print("✅ Database tables created successfully")
+    
+    # 테이블 존재 확인
+    from sqlalchemy import text
+    with engine.connect() as conn:
+        if settings.DATABASE_URL.startswith("sqlite"):
+            result = conn.execute(text("SELECT name FROM sqlite_master WHERE type='table';"))
+            tables = result.fetchall()
+            print(f"📋 Available tables: {[table[0] for table in tables]}")
+        elif settings.DATABASE_URL.startswith("postgresql"):
+            result = conn.execute(text("SELECT tablename FROM pg_tables WHERE schemaname = 'public';"))
+            tables = result.fetchall()
+            print(f"📋 Available tables: {[table[0] for table in tables]}")
+        else:
+            print("📋 Database type unknown, skipping table check")
+        
 except Exception as e:
-    print(f"Database initialization error: {e}")
+    print(f"❌ Database initialization error: {e}")
+    print(f"Error type: {type(e)}")
     # 에러가 나도 앱은 계속 실행
 
 app = FastAPI(title="Donation App (MVP)", version="1.0.1")
