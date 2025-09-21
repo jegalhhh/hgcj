@@ -195,6 +195,7 @@ const DetailText = styled.span`
 const BottomSection = styled.section`
   position: relative;
   margin-top: 78px;
+  margin-bottom: 100px;
 `;
 
 const Background = styled.img``;

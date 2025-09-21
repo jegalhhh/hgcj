@@ -145,9 +145,10 @@ const IconLogo = styled.img`
 `;
 
 const Detail = styled.div`
-  display: block;
-  flex: 1 1 auto;
+  display: inline-flex;
   min-width: 0;
+  width: fit-content;
+  max-width: calc(100% - (24px + 3px));
 
   height: 22px;
   line-height: 22px;

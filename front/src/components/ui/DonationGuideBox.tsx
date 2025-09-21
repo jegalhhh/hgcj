@@ -49,7 +49,6 @@ export default DonationGuideBox;
 
 const BoxView = styled.div`
   width: 100%;
-  height: 214px;
   background-color: rgba(255, 229, 226, 0.56);
   border-radius: 20px;
   padding: 19px 20px;
@@ -114,14 +113,14 @@ const Divider = styled.div`
 `;
 
 const DetailText = styled.span`
-  font-size: 13px;
+  font-size: clamp(8px, 3vw, 13px);
   font-weight: 400;
   line-height: 15.6px;
   color: ${colors.gray6};
 `;
 
 const RedText = styled.span`
-  font-size: 13px;
+  font-size: clamp(8px, 3vw, 13px);
   font-weight: 400;
   line-height: 15.6px;
   color: ${colors.red};
