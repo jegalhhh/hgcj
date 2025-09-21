@@ -104,6 +104,21 @@ export const GlobalStyle = createGlobalStyle`
         font-weight: 600;
     }
 
+        :root {
+      --gutter: 24px;
+      --padTop: max(42px, env(safe-area-inset-top, 0));
+      --padBottom: 44px;
+      --design-h: 912;
+      --scale: 1;
+    }
+
+    @supports (padding-top: env(safe-area-inset-top)) {
+      :root {
+        --padTop: max(40px, calc(env(safe-area-inset-top) + 16px));
+        --padBottom: max(44px, calc(env(safe-area-inset-top) + 16px));
+      }
+    }
+
     .app {
         min-height: calc(var(--vh, 1vh) * 100);
         display: flex;
@@ -117,11 +132,6 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     .container {
-        --gutter: 24px;
-        --padTop: 42px;
-        --padBottom: 44px;
-        --design-h: 912;
-        --scale: 1;
         padding: var(--padTop) var(--gutter) var(--padBottom);
         width: 100%;
     }

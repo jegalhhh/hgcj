@@ -4,9 +4,16 @@ import logo from "../../assets/images/logo/main_logo.png";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import SecondaryButton from "../../components/button/SecondaryButton";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Onboarding = () => {
   const navigate = useNavigate();
+  const { loginAsGuest } = useAuth();
+
+  const handleGuestLogin = () => {
+    loginAsGuest();
+    navigate("/donation");
+  };
 
   return (
     <>
@@ -20,10 +27,7 @@ const Onboarding = () => {
             title="로그인"
             onClick={() => navigate("/auth/login")}
           />
-          <SecondaryCompact
-            title="비회원 로그인"
-            onClick={() => navigate("/donation")}
-          />
+          <SecondaryCompact title="비회원 로그인" onClick={handleGuestLogin} />
           <SignupSection onClick={() => navigate("/auth/signup")}>
             <Text>회원가입</Text>
             <Line />

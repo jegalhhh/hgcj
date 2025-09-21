@@ -23,7 +23,8 @@ type StampCount = {
 };
 
 const API_BASE =
-  import.meta.env.VITE_API_BASE_URL ?? "https://hgcj-back.vercel.app";
+  import.meta.env.VITE_API_URL ??
+  "https://fastapi-386151446118.asia-northeast3.run.app";
 
 function toAbsoluteUrl(url?: string | null) {
   console.log("MyPageHome toAbsoluteUrl input:", url);
@@ -81,7 +82,7 @@ const MyPageHome = () => {
     fetchAll();
 
     const onStorage = () => {
-      const hasToken = !localStorage.getItem("ACCESS_TOKEN");
+      const hasToken = !!localStorage.getItem("ACCESS_TOKEN");
       if (hasToken) fetchAll();
       else {
         setMe(null);

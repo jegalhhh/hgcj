@@ -24,6 +24,7 @@ import cucumberGray from "../../assets/images/stamp/cucumber.png";
 import cucumberColor from "../../assets/images/stamp/cucumber_color.svg";
 import potGray from "../../assets/images/stamp/pot.png";
 import potColor from "../../assets/images/stamp/pot_color.svg";
+import { mq } from "../../styles/breakpoints";
 
 const STAMPS = [
   {
@@ -139,10 +140,9 @@ const MyStamp = () => {
               <Stamp
                 key={s.key}
                 src={src}
+                data-key={s.key}
                 alt={s.key}
                 style={{
-                  top: `${s.top}px`,
-                  left: `${s.left}px`,
                   transform: `rotate(${s.rotation ?? 0}deg)`,
                 }}
               />
@@ -203,4 +203,131 @@ const Stamp = styled.img`
   position: absolute;
   width: 100px;
   height: 100px;
+
+  &[data-key="tomato"] {
+    top: -30px;
+    left: 55px;
+  }
+  &[data-key="paprika"] {
+    top: -30px;
+    left: 195px;
+  }
+  &[data-key="milk"] {
+    top: 100px;
+    left: -10px;
+  }
+  &[data-key="broccoli"] {
+    top: 100px;
+    left: 125px;
+  }
+  &[data-key="bread"] {
+    top: 100px;
+    left: 255px;
+  }
+  &[data-key="pudding"] {
+    top: 255px;
+    left: 55px;
+  }
+  &[data-key="strawberry"] {
+    top: 255px;
+    left: 205px;
+  }
+  &[data-key="peach"] {
+    top: 390px;
+    left: 0px;
+  }
+  &[data-key="cucumber"] {
+    top: 390px;
+    left: 130px;
+  }
+  &[data-key="poster"] {
+    top: 390px;
+    left: 265px;
+  }
+
+  ${mq.between("sm", "md")} {
+    &[data-key="tomato"] {
+      top: -27px;
+      left: 50px;
+    }
+    &[data-key="paprika"] {
+      top: -27px;
+      left: 176px;
+    }
+    &[data-key="milk"] {
+      top: 90px;
+      left: -9px;
+    }
+    &[data-key="broccoli"] {
+      top: 90px;
+      left: 113px;
+    }
+    &[data-key="bread"] {
+      top: 90px;
+      left: 230px;
+    }
+    &[data-key="pudding"] {
+      top: 230px;
+      left: 50px;
+    }
+    &[data-key="strawberry"] {
+      top: 230px;
+      left: 185px;
+    }
+    &[data-key="peach"] {
+      top: 352px;
+      left: 0px;
+    }
+    &[data-key="cucumber"] {
+      top: 352px;
+      left: 117px;
+    }
+    &[data-key="poster"] {
+      top: 352px;
+      left: 239px;
+    }
+  }
+
+  ${mq.up("lg")} {
+    &[data-key="tomato"] {
+      top: -30px;
+      left: 56px;
+    }
+    &[data-key="paprika"] {
+      top: -30px;
+      left: 197px;
+    }
+    &[data-key="milk"] {
+      top: 101px;
+      left: -10px;
+    }
+    &[data-key="broccoli"] {
+      top: 101px;
+      left: 127px;
+    }
+    &[data-key="bread"] {
+      top: 101px;
+      left: 258px;
+    }
+    &[data-key="pudding"] {
+      top: 258px;
+      left: 56px;
+    }
+    &[data-key="strawberry"] {
+      top: 258px;
+      left: 207px;
+    }
+    &[data-key="peach"] {
+      top: 395px;
+      left: 0px;
+    }
+    &[data-key="cucumber"] {
+      top: 395px;
+      left: 132px;
+    }
+    &[data-key="poster"] {
+      top: 395px;
+      left: 268px;
+    }
+  }
 `;

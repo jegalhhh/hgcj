@@ -5,7 +5,6 @@ export const HeaderWrapper = styled.header`
   align-items: center;
   justify-content: center;
   height: 54px;
-  padding-top: env(safe-area-inset-top, 0);
 `;
 
 export const Logo = styled.img`

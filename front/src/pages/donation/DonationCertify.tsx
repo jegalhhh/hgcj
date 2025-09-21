@@ -13,18 +13,6 @@ import api from "../../../axiosConfig";
 
 const DonationCertify = () => {
   const navigate = useNavigate();
-
-  /*   const [isLoggedIn, setIsLoggedIn] = useState(
-    Boolean(localStorage.getItem("ACCESS_TOKEN"))
-  ); */
-
-  /*   useEffect(() => {
-    const onStorage = () =>
-      setIsLoggedIn(Boolean(localStorage.getItem("ACCESS_TOKEN")));
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
-  }, []); */
-
   const [uploadModalVisible, setUploadModalVisible] = useState(false);
   const [uploadedImage, setUploadedImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -52,24 +40,12 @@ const DonationCertify = () => {
       alert("이미지를 업로드해 주세요.");
       return;
     }
-    /*
-    if (!isLoggedIn && !guestNickname.trim()) {
-      alert("닉네임을 입력해 주세요.");
-      return;
-    }
-      */
 
     const formData = new FormData();
     formData.append("item_name", itemName);
     formData.append("quantity", quantity);
     formData.append("image", uploadedImage);
 
-    /*
-    비회원용 닉네임 설정 - 서버 로직 수정 필요
-    if (!isLoggedIn) {
-      formData.append("nickname", guestNickname.trim());
-    }
-      */
     try {
       setLoading(true);
       const { data } = await api.post("/donations", formData, {
@@ -108,16 +84,6 @@ const DonationCertify = () => {
       <DonationGuideBox />
       <FormSection>
         <div>
-          {/*!isLoggedIn && (
-            <LabeledDonationInput
-            label="0. 닉네임을 입력해주세요."
-            placeholder="닉네임을 입력해주세요."
-            value={guestNickname}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setGuestNickname(e.target.value)
-            }
-            />
-          )*/}
           <UploadImageForm onClick={() => setUploadModalVisible(true)}>
             <Label>1. 기부 이미지를 업로드 해주세요.</Label>
             <UploadButton>

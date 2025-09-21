@@ -5,7 +5,6 @@ import loginLogo from "../../assets/images/logo/login_logo.png";
 import background from "../../assets/images/background/back_green.png";
 import LabeledInput from "../../components/form/LabeledInput";
 import PrimaryButton from "../../components/button/PrimaryButton";
-import SecondaryButton from "../../components/button/SecondaryButton";
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
@@ -18,7 +17,7 @@ type LoginResponse = {
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login, loginAsGuest } = useAuth();
+  const { login } = useAuth();
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -52,11 +51,6 @@ const Login = () => {
     }
   };
 
-  const handleGuestLogin = () => {
-    loginAsGuest();
-    navigate("/donation/hall");
-  };
-
   return (
     <>
       <Container>
@@ -88,18 +82,11 @@ const Login = () => {
             />
             {}
           </div>
-          <ButtonGroup>
-            <PrimaryButton
-              title="로그인"
-              onClick={() => handleSubmit()}
-              disabled={loading}
-            />
-            <SecondaryButton
-              title="비회원으로 리더보드 보기"
-              onClick={handleGuestLogin}
-              disabled={loading}
-            />
-          </ButtonGroup>
+          <PrimaryButton
+            title="로그인"
+            onClick={() => handleSubmit()}
+            disabled={loading}
+          />
         </FormSection>
       </Container>
     </>
@@ -177,10 +164,4 @@ const FormSection = styled.div`
   ${preset.xsShort} {
     height: 450px;
   }
-`;
-
-const ButtonGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
 `;

@@ -27,7 +27,8 @@ type HistoryItem = {
 };
 
 const API_BASE =
-  import.meta.env.VITE_API_BASE_URL ?? "https://hgcj-back.vercel.app";
+  import.meta.env.VITE_API_URL ??
+  "https://fastapi-386151446118.asia-northeast3.run.app";
 const FALLBACK_IMG = "https://placehold.co/120x120?text=No+Image";
 
 function toAbsoluteUrl(url?: string | null) {

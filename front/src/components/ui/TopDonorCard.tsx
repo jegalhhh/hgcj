@@ -1,9 +1,12 @@
 import styled from "styled-components";
 import top1Donor from "../../assets/images/donation/top1_store.png";
 import iconLogo from "../../assets/images/logo/icon_logo.png";
-import storeImage from "../../assets/images/store.png";
 import nextIcon from "../../assets/images/icon/next.png";
 import { colors } from "../../styles/colors";
+import logoH from "../../assets/images/logo/icon_logo.png";
+import logoG from "../../assets/images/logo/logo_g.png";
+import logoC from "../../assets/images/logo/logo_c.png";
+import logoJ from "../../assets/images/logo/logo_j.png";
 
 type Props = {
   storeName?: string;
@@ -13,9 +16,9 @@ type Props = {
 };
 
 const TopDonorCard = ({
-  storeName = "가게이름",
-  detail = "가게 홍보 어쩌구 가게 홍보 어쩌구 가게 홍보 어쩌구 가게 홍보 어쩌구",
-  photos = [storeImage, storeImage, storeImage, storeImage],
+  storeName = "행궁찬장",
+  detail = "우리 동네, 우리 손으로 채우는 냉장고",
+  photos = [logoH, logoG, logoC, logoJ],
   onClick,
 }: Props) => {
   return (
@@ -70,7 +73,7 @@ const Badge = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 130px 13px 150px;
+  padding: 8px 0 13px 50px;
   background-image: url(${top1Donor});
   background-repeat: no-repeat;
   background-size: contain;
@@ -81,6 +84,7 @@ const BadgeText = styled.span`
   font-family: ROKAFSans, Pretendard, sans-serif;
   font-weight: 500;
   font-size: 13px;
+  width: 80px;
 `;
 
 const NextIcon = styled.img`

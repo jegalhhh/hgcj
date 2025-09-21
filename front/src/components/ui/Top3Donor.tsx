@@ -19,7 +19,8 @@ type TopDonor = {
 };
 
 const API_BASE =
-  import.meta.env.VITE_API_BASE_URL ?? "https://hgcj-back.vercel.app";
+  import.meta.env.VITE_API_URL ??
+  "https://fastapi-386151446118.asia-northeast3.run.app";
 
 function toAbsoluteUrl(url?: string | null) {
   if (!url) return "";
@@ -72,7 +73,7 @@ const Top3Donor = ({ onClick }: Props) => {
   return (
     <>
       <Podium onClick={onClick}>
-        <PodiumCard data-rank="2" $h={206}>
+        <PodiumCard data-rank="2">
           <CardContent>
             <DonorImage
               src={
@@ -92,7 +93,7 @@ const Top3Donor = ({ onClick }: Props) => {
             </TextWrapper>
           </CardContent>
         </PodiumCard>
-        <PodiumCard data-rank="1" $h={240}>
+        <PodiumCard data-rank="1">
           <CardContent>
             <DonorImage
               data-rank="1"
@@ -111,7 +112,7 @@ const Top3Donor = ({ onClick }: Props) => {
             </TextWrapper>
           </CardContent>
         </PodiumCard>
-        <PodiumCard data-rank="3" $h={206}>
+        <PodiumCard data-rank="3">
           <CardContent>
             <DonorImage
               src={
@@ -136,7 +137,7 @@ export default Top3Donor;
 
 const Podium = styled.div`
   width: 100%;
-  height: 253px;
+  height: clamp(225px, 35vw, 240px);
   display: flex;
   flex-direction: row;
   align-items: flex-end;
@@ -152,7 +153,7 @@ const PodiumCard = styled.article<{ $h?: number }>`
   box-sizing: border-box;
   z-index: var(--z, 1);
 
-  height: ${({ $h }) => ($h ? `${$h}px` : "206px")};
+  height: auto;
   aspect-ratio: 146 / 249;
 
   display: flex;
@@ -167,14 +168,17 @@ const PodiumCard = styled.article<{ $h?: number }>`
   &[data-rank="1"] {
     background-image: url(${top1});
     padding: 45px 33px 0 20px;
+    height: clamp(230px, 35vw, 260px);
   }
   &[data-rank="2"] {
     background-image: url(${top2});
     padding: 30px 30px 0 21.65px;
+    height: clamp(190px, 32vw, 226px);
   }
   &[data-rank="3"] {
     background-image: url(${top3});
     padding: 30px 25px 0 18px;
+    height: clamp(190px, 32vw, 226px);
   }
 `;
 
@@ -195,14 +199,14 @@ const DonorImage = styled.img`
   position: relative;
   z-index: 2;
   border-radius: 64px;
-  width: 64px;
-  height: 64px;
+  width: clamp(55px, 12vw, 64px);
+  height: clamp(55px, 12vw, 64px);
   object-fit: cover;
   display: block;
 
   &[data-rank="1"] {
-    width: 86.58px;
-    height: 86.58px;
+    width: clamp(78px, 14vw, 86.58px);
+    height: clamp(78px, 14vw, 86.58px);
   }
 `;
 
