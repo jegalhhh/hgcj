@@ -57,7 +57,7 @@ const DonationHome = () => {
     const onStorage = () => {
       const hasToken = !!localStorage.getItem("ACCESS_TOKEN");
       const isGuest = localStorage.getItem("GUEST_MODE") === "true";
-      
+
       if (isGuest || !hasToken) {
         setCounts({ total_donations: 0, verified_donations: 0 });
       } else {
@@ -78,10 +78,12 @@ const DonationHome = () => {
         <Header variant="logo" />
 
         <TopSection>
-          <DonationButton 
+          <DonationButton
             onClick={() => {
               if (authState.isGuest) {
-                alert("기부 인증은 회원만 이용 가능합니다. 회원가입 후 이용해주세요.");
+                alert(
+                  "기부 인증은 회원만 이용 가능합니다. 회원가입 후 이용해주세요."
+                );
                 navigate("/");
               } else {
                 navigate("/donation/certify");
@@ -102,10 +104,12 @@ const DonationHome = () => {
               />
             </PlusIcon>
           </DonationButton>
-          <DonationStatusCard 
+          <DonationStatusCard
             onClick={() => {
               if (authState.isGuest) {
-                alert("마이페이지는 회원만 이용 가능합니다. 회원가입 후 이용해주세요.");
+                alert(
+                  "마이페이지는 회원만 이용 가능합니다. 회원가입 후 이용해주세요."
+                );
                 navigate("/");
               } else {
                 navigate("/mypage");

@@ -10,6 +10,8 @@ import stamp from "../../assets/images/icon/stamp.png";
 import { colors } from "../../styles/colors";
 import { useEffect, useState } from "react";
 import api from "../../../axiosConfig";
+import { IoLockClosed } from "react-icons/io5";
+import InputModal from "../../components/modal/InputModal";
 
 type Me = {
   id: number;
@@ -57,6 +59,7 @@ const MyPageHome = () => {
     total_donations: 0,
     verified_donations: 0,
   });
+  const [showInputModal, setShowInputModal] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -102,7 +105,12 @@ const MyPageHome = () => {
   return (
     <>
       <Container>
-        <Header variant="title" title="마이페이지" />
+        <Header
+          variant="titleWithIcon"
+          title="마이페이지"
+          icon={<IoLockClosed />}
+          onIconClick={() => setShowInputModal(true)}
+        />
 
         <TopSection>
           <UserImage
@@ -147,6 +155,9 @@ const MyPageHome = () => {
             </CardContent>
           </StatusCard>
         </BottomSection>
+        {showInputModal && (
+          <InputModal onClose={() => setShowInputModal(false)} />
+        )}
       </Container>
 
       <BottomTab />

@@ -4,11 +4,17 @@ type Props = {
   title: string;
   onClick: () => void;
   disabled?: boolean;
+  className?: string;
 };
 
-const PrimaryButton = ({ title, onClick, disabled }: Props) => {
+const PrimaryButton = ({ title, onClick, disabled, className }: Props) => {
   return (
-    <S.PrimaryWrapper type="button" onClick={onClick} disabled={disabled}>
+    <S.PrimaryWrapper
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className={className}
+    >
       <S.ButtonText>{title}</S.ButtonText>
     </S.PrimaryWrapper>
   );

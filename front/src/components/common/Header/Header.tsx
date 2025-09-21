@@ -1,6 +1,7 @@
 import * as S from "./Header.styles";
 import headerLogo from "../../../assets/images/logo/header_logo.png";
 import backBtn from "../../../assets/images/icon/left.png";
+import type { ReactNode } from "react";
 
 type HeaderProps =
   | { variant: "logo" }
@@ -9,6 +10,12 @@ type HeaderProps =
       variant: "backWithTitle";
       title: string;
       onBack: () => void;
+    }
+  | {
+      variant: "titleWithIcon";
+      title: string;
+      icon: ReactNode;
+      onIconClick?: () => void;
     }
   | {
       variant: "backWithLogo";
@@ -46,6 +53,17 @@ const Header = (props: HeaderProps) => {
       <S.HeaderWrapper>
         <S.BackButton src={backBtn} alt="뒤로가기" onClick={props.onBack} />
         <S.Logo src={headerLogo} alt="로고" />
+      </S.HeaderWrapper>
+    );
+  }
+
+  if (props.variant === "titleWithIcon") {
+    return (
+      <S.HeaderWrapper>
+        <S.Title>{props.title}</S.Title>
+        <S.IconButton type="button" onClick={props.onIconClick}>
+          {props.icon}
+        </S.IconButton>
       </S.HeaderWrapper>
     );
   }

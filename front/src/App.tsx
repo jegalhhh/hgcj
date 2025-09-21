@@ -11,6 +11,8 @@ import DonorHall from "./pages/donation/DonorHall.tsx";
 import MyPageHome from "./pages/mypage/MyPageHome.tsx";
 import MyDonationHistory from "./pages/mypage/MyDonationHistory.tsx";
 import MyStamp from "./pages/mypage/MyStamp.tsx";
+import DonationAdmin from "./pages/donation/DonationAdmin.tsx";
+import GlobalLoading from "./components/common/GlobalLoading.tsx";
 
 function App() {
   useViewportHeight();
@@ -29,12 +31,14 @@ function App() {
               <Route path="/donation" element={<DonationHome />} />
               <Route path="/donation/certify" element={<DonationCertify />} />
               <Route path="/donation/hall" element={<DonorHall />} />
+              <Route path="/donation/admin" element={<DonationAdmin />} />
 
               <Route path="/mypage" element={<MyPageHome />} />
               <Route path="/mypage/history" element={<MyDonationHistory />} />
               <Route path="/mypage/stamp" element={<MyStamp />} />
             </Routes>
           </main>
+          <GlobalLoading />
         </div>
       </AuthProvider>
     </>

@@ -80,7 +80,6 @@ const Login = () => {
                 setPassword(e.target.value)
               }
             />
-            {}
           </div>
           <PrimaryButton
             title="로그인"
